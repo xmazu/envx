@@ -61,10 +61,6 @@ func runRun(cmd *cobra.Command, args []string) error {
 	if err := runenv.MergeOverlayEnv(merged, runEnv, runOverload); err != nil {
 		return err
 	}
-	envMap, err := runenv.ExpandMap(merged)
-	if err != nil {
-		return err
-	}
 
 	command := args[0]
 	var cmdArgs []string
@@ -72,13 +68,14 @@ func runRun(cmd *cobra.Command, args []string) error {
 		cmdArgs = args[1:]
 	}
 
+	// Decide watch before expansion so temporary expansion failures don't block watch mode.
 	shouldWatch := !runNoWatch && runenv.IsDevServerCommand(command)
 
 	if !shouldWatch {
-		return runOnce(envMap, command, cmdArgs)
+		return runOnce(merged, command, cmdArgs)
 	}
 
-	return runWithWatch(envMap, files, command, cmdArgs)
+	return runWithWatch(merged, files, command, cmdArgs)
 }
 
 func resolveEnvFiles() []string {
@@ -108,9 +105,12 @@ func resolveEnvFiles() []string {
 	return files
 }
 
-func runOnce(envMap map[string]string, command string, args []string) error {
+func runOnce(merged map[string]string, command string, args []string) error {
+	envMap, err := runenv.ExpandMap(merged)
+	if err != nil {
+		return err
+	}
 	var exitCode int
-	var err error
 	if runRedact {
 		exitCode, err = runenv.RunWithEnvRedactedFromMap(envMap, "", command, args)
 	} else {
@@ -125,7 +125,12 @@ func runOnce(envMap map[string]string, command string, args []string) error {
 	return nil
 }
 
-func runWithWatch(envMap map[string]string, files []string, command string, args []string) error {
+func runWithWatch(merged map[string]string, files []string, command string, args []string) error {
+	envMap, err := runenv.ExpandMap(merged)
+	if err != nil {
+		return err
+	}
+
 	fw, err := watch.NewFileWatcher()
 	if err != nil {
 		return fmt.Errorf("create file watcher: %w", err)
@@ -181,16 +186,16 @@ func runWithWatch(envMap map[string]string, files []string, command string, args
 
 			newMerged, err := runenv.LoadDecryptedEnvFromFiles(files, runOverload, runStrict)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error reloading .env: %v\n", err)
+				fmt.Fprintf(os.Stderr, "Error reloading .env: %v — keeping previous environment, process not restarted.\n", err)
 				continue
 			}
 			if err := runenv.MergeOverlayEnv(newMerged, runEnv, runOverload); err != nil {
-				fmt.Fprintf(os.Stderr, "Error merging overlay: %v\n", err)
+				fmt.Fprintf(os.Stderr, "Error merging overlay: %v — keeping previous environment, process not restarted.\n", err)
 				continue
 			}
 			newEnv, err := runenv.ExpandMap(newMerged)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error expanding variables: %v\n", err)
+				fmt.Fprintf(os.Stderr, "Error expanding variables: %v — keeping previous environment, process not restarted.\n", err)
 				continue
 			}
 

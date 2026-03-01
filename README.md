@@ -52,7 +52,7 @@ Circular references and undefined variables cause an error.
 
 ### Command substitution: `$(command)`
 
-Run a shell command and use its stdout (trimmed) as the value. Commands run with your current process environment (e.g. `PATH`, `HOME`). Resolved first, so you can combine with `${VAR}`.
+Run a shell command and use its stdout (trimmed) as the value. Commands run with a **minimal environment** (only `PATH`, `HOME`, `USER`, `LANG`) so they cannot access secrets from the parent process. Resolved first, so you can combine with `${VAR}`.
 
 ```bash
 # Inject current user or hostname

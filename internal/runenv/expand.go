@@ -2,6 +2,7 @@ package runenv
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -12,11 +13,28 @@ const commandSubstPrefix = "$("
 // varRef matches ${VAR} where VAR is a single identifier (letters, digits, underscore).
 var varRef = regexp.MustCompile(`\$\{([a-zA-Z_][a-zA-Z0-9_]*)\}`)
 
+// minimalShellEnv returns a minimal environment for $(...) commands so they
+// do not inherit secrets from the parent process. Includes only PATH, HOME,
+// USER, and LANG so common commands (whoami, hostname, date, etc.) work.
+func minimalShellEnv() []string {
+	var env []string
+	for _, key := range []string{"PATH", "HOME", "USER", "LANG"} {
+		if v := os.Getenv(key); v != "" {
+			env = append(env, key+"="+v)
+		}
+	}
+	if len(env) == 0 {
+		env = append(env, "PATH=/usr/bin:/bin")
+	}
+	return env
+}
+
 // runShellCommand runs command via sh -c and returns trimmed stdout.
-// Uses the current process environment (PATH, HOME, etc.).
+// Uses a minimal environment (PATH, HOME, USER, LANG) only—not the full
+// process environment—so that command substitution cannot access parent secrets.
 func runShellCommand(command string) (string, error) {
 	cmd := exec.Command("sh", "-c", command)
-	cmd.Env = nil
+	cmd.Env = minimalShellEnv()
 	out, err := cmd.Output()
 	if err != nil {
 		if ee, ok := err.(*exec.ExitError); ok && len(ee.Stderr) > 0 {
