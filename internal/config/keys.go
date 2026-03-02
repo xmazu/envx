@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/xmazu/openenvx/internal/storage"
+	"github.com/xmazu/envx/internal/storage"
 )
 
 const KeysFileName = "keys.yaml"

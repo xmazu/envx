@@ -1,6 +1,6 @@
 #!/bin/bash
-# OpenEnvX Installer
-# Installation: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/xmazu/openenvx/main/scripts/install.sh)"
+# EnvX Installer
+# Installation: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/xmazu/envx/main/scripts/install.sh)"
 
 set -e
 
@@ -12,9 +12,9 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-REPO="xmazu/openenvx"
+REPO="xmazu/envx"
 INSTALL_DIR="/usr/local/bin"
-BINARY_NAME="openenvx"
+BINARY_NAME="envx"
 
 print_info() {
     echo -e "${BLUE}ℹ${NC} $1" >&2
@@ -66,7 +66,7 @@ get_latest_version() {
 
 # Main installation
 main() {
-    print_info "Installing OpenEnvX"
+    print_info "Installing EnvX"
     echo "" >&2
 
     OS=$(detect_os)
@@ -93,17 +93,17 @@ main() {
     if [ -x "${INSTALL_DIR}/${BINARY_NAME}" ]; then
         INSTALLED_VERSION=$("${INSTALL_DIR}/${BINARY_NAME}" --version 2>/dev/null | sed -nE 's/.*v([0-9.]+).*/\1/p' || echo "unknown")
         if [ "$INSTALLED_VERSION" = "$VERSION" ]; then
-            print_success "OpenEnvX v${VERSION} is already installed at ${INSTALL_DIR}/${BINARY_NAME}"
+            print_success "EnvX v${VERSION} is already installed at ${INSTALL_DIR}/${BINARY_NAME}"
             echo "" >&2
             print_info "Next steps:"
-            echo "  1. Initialize: openenvx init" >&2
-            echo "  2. Store a secret: openenvx set DATABASE_URL" >&2
-            echo "  3. Run with decrypted env: openenvx run -- npm start" >&2
+            echo "  1. Initialize: envx init" >&2
+            echo "  2. Store a secret: envx set DATABASE_URL" >&2
+            echo "  3. Run with decrypted env: envx run -- npm start" >&2
             exit 0
         fi
     fi
 
-    print_info "Downloading openenvx v${VERSION}..."
+    print_info "Downloading envx v${VERSION}..."
 
     TEMP_FILE=$(mktemp)
     if ! curl -fsSL -o "$TEMP_FILE" "$DOWNLOAD_URL"; then
@@ -136,17 +136,17 @@ main() {
         chmod +x "${INSTALL_DIR}/${BINARY_NAME}"
     fi
 
-    print_success "Installed openenvx v${VERSION} to ${INSTALL_DIR}/${BINARY_NAME}"
+    print_success "Installed envx v${VERSION} to ${INSTALL_DIR}/${BINARY_NAME}"
 
     echo "" >&2
     print_info "Installation complete!"
     echo "" >&2
     print_info "Next steps:"
-    echo "  1. Initialize: openenvx init" >&2
-    echo "  2. Store a secret: openenvx set DATABASE_URL" >&2
-    echo "  3. Run with decrypted env: openenvx run -- npm start" >&2
+    echo "  1. Initialize: envx init" >&2
+    echo "  2. Store a secret: envx set DATABASE_URL" >&2
+    echo "  3. Run with decrypted env: envx run -- npm start" >&2
     echo "" >&2
-    echo "For more info: openenvx help" >&2
+    echo "For more info: envx help" >&2
 }
 
 main "$@"

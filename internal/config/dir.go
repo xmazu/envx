@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	ConfigDirEnv = "OPENENVX_CONFIG_DIR"
-	ConfigSubdir = "openenvx"
+	ConfigDirEnv = "ENVX_CONFIG_DIR"
+	ConfigSubdir = "envx"
 )
 
 func ConfigDir() string {

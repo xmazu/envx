@@ -1,4 +1,4 @@
-module github.com/xmazu/openenvx
+module github.com/xmazu/envx
 
 go 1.24.0
 

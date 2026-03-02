@@ -6,24 +6,24 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
-	"github.com/xmazu/openenvx/internal/config"
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/envfile"
-	"github.com/xmazu/openenvx/internal/tui"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/config"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/envfile"
+	"github.com/xmazu/envx/internal/tui"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize workspace with encryption",
-	Long: `Initialize a new OpenEnvX workspace.
+	Long: `Initialize a new EnvX workspace.
 
 Finds the workspace root (monorepo markers or current directory), generates a new
 keypair, and encrypts all .env files with the workspace key.
 
-The public key is stored in .openenvx.yaml at the workspace root.
-The private key is stored in ~/.config/openenvx/keys.yaml and should be shared with your
-team via a password manager (e.g. 1Password). New teammates run 'openenvx key add'
+The public key is stored in .envx.yaml at the workspace root.
+The private key is stored in ~/.config/envx/keys.yaml and should be shared with your
+team via a password manager (e.g. 1Password). New teammates run 'envx key add'
 to add the private key.`,
 	RunE: runInit,
 }
@@ -41,10 +41,10 @@ func runInit(cmd *cobra.Command, args []string) error {
 	if workspace.IsInitialized(wsRoot) {
 		marker := workspace.FindMarker(wsRoot)
 		markerStr := workspace.FormatMarkerForDisplay(marker)
-		return fmt.Errorf("Workspace already initialized at %s (%s).\n\nUse 'openenvx key add' to add your private key.\nUse 'openenvx migrate' to encrypt new .env files.", wsRoot, markerStr)
+		return fmt.Errorf("Workspace already initialized at %s (%s).\n\nUse 'envx key add' to add your private key.\nUse 'envx migrate' to encrypt new .env files.", wsRoot, markerStr)
 	}
 
-	if err := workspace.ErrEncryptedEnvWithoutOpenenvx(wsRoot); err != nil {
+	if err := workspace.ErrEncryptedEnvWithoutEnvx(wsRoot); err != nil {
 		return err
 	}
 
@@ -124,9 +124,9 @@ func runInit(cmd *cobra.Command, args []string) error {
 	}
 
 	if err := workspace.WriteWorkspaceFile(wsRoot, &workspace.WorkspaceConfig{PublicKey: publicKey}); err != nil {
-		return fmt.Errorf("write .openenvx.yaml: %w", err)
+		return fmt.Errorf("write .envx.yaml: %w", err)
 	}
-	fmt.Fprintf(os.Stdout, "  %s Created .openenvx.yaml\n", tui.Success("✓"))
+	fmt.Fprintf(os.Stdout, "  %s Created .envx.yaml\n", tui.Success("✓"))
 
 	marker := workspace.FindMarker(wsRoot)
 	markerStr := workspace.FormatMarkerForDisplay(marker)
@@ -136,10 +136,10 @@ func runInit(cmd *cobra.Command, args []string) error {
 		fmt.Fprintf(os.Stdout, ", %d skipped", totalSkipped)
 	}
 	fmt.Fprintln(os.Stdout)
-	fmt.Fprintf(os.Stdout, "%s Share the private key with your team (e.g. 1Password). New teammates: %s\n", tui.Muted("Tip:"), tui.Label("openenvx key add"))
+	fmt.Fprintf(os.Stdout, "%s Share the private key with your team (e.g. 1Password). New teammates: %s\n", tui.Muted("Tip:"), tui.Label("envx key add"))
 
 	if runCmd := workspace.SuggestDevRunCommand(wsRoot); runCmd != "" {
-		fmt.Fprintf(os.Stdout, "%s Run your dev server with decrypted env: %s\n", tui.Muted("Tip:"), tui.Label("openenvx run -- "+runCmd))
+		fmt.Fprintf(os.Stdout, "%s Run your dev server with decrypted env: %s\n", tui.Muted("Tip:"), tui.Label("envx run -- "+runCmd))
 	}
 
 	return nil

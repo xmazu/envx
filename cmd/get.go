@@ -9,15 +9,15 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/xmazu/openenvx/internal/runenv"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/runenv"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 var getCmd = &cobra.Command{
 	Use:   "get [KEY]",
 	Short: "Get decrypted environment variable(s)",
 	Long: `Get one or all decrypted environment variables from the .env file.
-Without KEY, outputs all variables as JSON. With KEY, outputs the single value (for scripts: $(openenvx get KEY)).
+Without KEY, outputs all variables as JSON. With KEY, outputs the single value (for scripts: $(envx get KEY)).
 Use --format shell or --format eval for shell-friendly output.
 Use --masked to get a masked version of the value without seeing plaintext.`,
 	Args: cobra.MaximumNArgs(1),

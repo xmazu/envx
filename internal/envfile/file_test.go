@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/xmazu/openenvx/internal/crypto"
+	"github.com/xmazu/envx/internal/crypto"
 )
 
 func deriveMasterKeyFromIdentity(t *testing.T) *crypto.MasterKey {
@@ -42,7 +42,7 @@ func TestLoad(t *testing.T) {
 		tmpDir := t.TempDir()
 		testFile := filepath.Join(tmpDir, "test.env")
 
-		content := `# OpenEnvX encrypted environment file
+		content := `# EnvX encrypted environment file
 # Header comment
 KEY1=value1
 KEY2=value2

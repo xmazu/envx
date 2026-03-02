@@ -6,13 +6,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/xmazu/openenvx/internal/config"
-	"github.com/xmazu/openenvx/internal/envfile"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/config"
+	"github.com/xmazu/envx/internal/envfile"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 func TestRunInit(t *testing.T) {
-	t.Run("no .env creates single .env and .openenvx.yaml", func(t *testing.T) {
+	t.Run("no .env creates single .env and .envx.yaml", func(t *testing.T) {
 		tmpDir := t.TempDir()
 		configDir := t.TempDir()
 		t.Setenv(config.ConfigDirEnv, configDir)
@@ -32,9 +32,9 @@ func TestRunInit(t *testing.T) {
 			t.Fatal(".env should be created")
 		}
 
-		workspacePath := filepath.Join(tmpDir, ".openenvx.yaml")
+		workspacePath := filepath.Join(tmpDir, ".envx.yaml")
 		if _, err := os.Stat(workspacePath); os.IsNotExist(err) {
-			t.Fatal(".openenvx.yaml should be created for single file")
+			t.Fatal(".envx.yaml should be created for single file")
 		}
 
 		wc, err := workspace.ReadWorkspaceFile(tmpDir)
@@ -42,11 +42,11 @@ func TestRunInit(t *testing.T) {
 			t.Fatalf("ReadWorkspaceFile() error = %v", err)
 		}
 		if wc.PublicKey == "" {
-			t.Error(".openenvx.yaml should have public key")
+			t.Error(".envx.yaml should have public key")
 		}
 	})
 
-	t.Run("single .env file gets encrypted and .openenvx.yaml created", func(t *testing.T) {
+	t.Run("single .env file gets encrypted and .envx.yaml created", func(t *testing.T) {
 		tmpDir := t.TempDir()
 		configDir := t.TempDir()
 		t.Setenv(config.ConfigDirEnv, configDir)
@@ -66,9 +66,9 @@ func TestRunInit(t *testing.T) {
 			t.Fatalf("runInit() error = %v", err)
 		}
 
-		workspacePath := filepath.Join(tmpDir, ".openenvx.yaml")
+		workspacePath := filepath.Join(tmpDir, ".envx.yaml")
 		if _, err := os.Stat(workspacePath); os.IsNotExist(err) {
-			t.Fatal(".openenvx.yaml should be created for single file")
+			t.Fatal(".envx.yaml should be created for single file")
 		}
 
 		wc, err := workspace.ReadWorkspaceFile(tmpDir)
@@ -76,7 +76,7 @@ func TestRunInit(t *testing.T) {
 			t.Fatalf("ReadWorkspaceFile() error = %v", err)
 		}
 		if wc.PublicKey == "" {
-			t.Error(".openenvx.yaml should have public key")
+			t.Error(".envx.yaml should have public key")
 		}
 
 		envFile, err := envfile.Load(envPath)
@@ -93,7 +93,7 @@ func TestRunInit(t *testing.T) {
 		}
 	})
 
-	t.Run("multiple .env files creates .openenvx.yaml, no headers", func(t *testing.T) {
+	t.Run("multiple .env files creates .envx.yaml, no headers", func(t *testing.T) {
 		tmpDir := t.TempDir()
 		configDir := t.TempDir()
 		t.Setenv(config.ConfigDirEnv, configDir)
@@ -123,9 +123,9 @@ func TestRunInit(t *testing.T) {
 			t.Fatalf("runInit() error = %v", err)
 		}
 
-		workspacePath := filepath.Join(tmpDir, ".openenvx.yaml")
+		workspacePath := filepath.Join(tmpDir, ".envx.yaml")
 		if _, err := os.Stat(workspacePath); os.IsNotExist(err) {
-			t.Fatal(".openenvx.yaml should be created for multiple files")
+			t.Fatal(".envx.yaml should be created for multiple files")
 		}
 
 		wc, err := workspace.ReadWorkspaceFile(tmpDir)
@@ -133,7 +133,7 @@ func TestRunInit(t *testing.T) {
 			t.Fatalf("ReadWorkspaceFile() error = %v", err)
 		}
 		if wc.PublicKey == "" {
-			t.Error(".openenvx.yaml should have public key")
+			t.Error(".envx.yaml should have public key")
 		}
 
 		rootFile, err := envfile.Load(rootEnv)

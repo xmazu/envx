@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/envfile"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/envfile"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 func TestRunGet(t *testing.T) {
@@ -20,8 +20,8 @@ func TestRunGet(t *testing.T) {
 		identityStr, _ := mustSetupEncryptedEnv(t, tmpDir, testFile, map[string]string{"MY_KEY": "my-value"})
 
 		getFile = testFile
-		os.Setenv("OPENENVX_PRIVATE_KEY", identityStr)
-		defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+		os.Setenv("ENVX_PRIVATE_KEY", identityStr)
+		defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 		old := os.Stdout
 		r, w, _ := os.Pipe()
@@ -48,8 +48,8 @@ func TestRunGet(t *testing.T) {
 		getFile = testFile
 		getFormat = "shell"
 		defer func() { getFormat = "json" }()
-		os.Setenv("OPENENVX_PRIVATE_KEY", identityStr)
-		defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+		os.Setenv("ENVX_PRIVATE_KEY", identityStr)
+		defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 		old := os.Stdout
 		r, w, _ := os.Pipe()
@@ -74,8 +74,8 @@ func TestRunGet(t *testing.T) {
 		identityStr, _ := mustSetupEncryptedEnv(t, tmpDir, testFile, map[string]string{"K1": "v1", "K2": "v2"})
 
 		getFile = testFile
-		os.Setenv("OPENENVX_PRIVATE_KEY", identityStr)
-		defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+		os.Setenv("ENVX_PRIVATE_KEY", identityStr)
+		defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 		old := os.Stdout
 		r, w, _ := os.Pipe()
@@ -104,8 +104,8 @@ func TestRunGet(t *testing.T) {
 		identityStr, _ := mustSetupEncryptedEnv(t, tmpDir, testFile, map[string]string{"X": "y"})
 
 		getFile = testFile
-		os.Setenv("OPENENVX_PRIVATE_KEY", identityStr)
-		defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+		os.Setenv("ENVX_PRIVATE_KEY", identityStr)
+		defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 		err := runGet(nil, []string{"MISSING"})
 		if err == nil {
@@ -116,8 +116,8 @@ func TestRunGet(t *testing.T) {
 	t.Run("missing file returns error", func(t *testing.T) {
 		tmpDir := t.TempDir()
 		getFile = filepath.Join(tmpDir, "nonexistent.env")
-		os.Setenv("OPENENVX_PRIVATE_KEY", "AGE-SECRET-KEY-1QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ")
-		defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+		os.Setenv("ENVX_PRIVATE_KEY", "AGE-SECRET-KEY-1QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ")
+		defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 		err := runGet(nil, []string{"ANY"})
 		if err == nil {

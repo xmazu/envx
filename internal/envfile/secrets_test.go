@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/xmazu/openenvx/internal/scanner"
+	"github.com/xmazu/envx/internal/scanner"
 )
 
 func TestDetectCommentedSecrets(t *testing.T) {

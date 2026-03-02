@@ -10,9 +10,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/envfile"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/envfile"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 func LoadDecryptedEnv(envFilePath, wsRoot string) (map[string]string, error) {
@@ -160,7 +160,7 @@ func redactOutput(data []byte, envMap map[string]string) []byte {
 
 func GetMasterKeyForWorkspace(wsRoot string) (*crypto.MasterKey, error) {
 	if !workspace.WorkspaceFileExists(wsRoot) {
-		return nil, fmt.Errorf("workspace not initialized - run 'openenvx init' first")
+		return nil, fmt.Errorf("workspace not initialized - run 'envx init' first")
 	}
 
 	wc, err := workspace.ReadWorkspaceFile(wsRoot)
@@ -173,7 +173,7 @@ func GetMasterKeyForWorkspace(wsRoot string) (*crypto.MasterKey, error) {
 
 	identity, ok := crypto.GetPrivateKey(wsRoot)
 	if !ok {
-		return nil, fmt.Errorf("private key not found - set OPENENVX_PRIVATE_KEY or add key with 'openenvx key add'")
+		return nil, fmt.Errorf("private key not found - set ENVX_PRIVATE_KEY or add key with 'envx key add'")
 	}
 
 	strategy := crypto.NewAsymmetricStrategy(identity)

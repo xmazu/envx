@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 func TestRunLs(t *testing.T) {

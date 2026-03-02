@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/xmazu/openenvx/internal/audit"
+	"github.com/xmazu/envx/internal/audit"
 )
 
 var auditCmd = &cobra.Command{

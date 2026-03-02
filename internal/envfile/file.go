@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/xmazu/openenvx/internal/crypto"
+	"github.com/xmazu/envx/internal/crypto"
 )
 
 type File struct {
@@ -65,7 +65,7 @@ func (f *File) parseLine(line string, num int) {
 	}
 
 	trimmed := strings.TrimSpace(line)
-	if after, ok :=strings.CutPrefix(trimmed, "#"); ok  {
+	if after, ok := strings.CutPrefix(trimmed, "#"); ok {
 		afterComment := strings.TrimSpace(after)
 		if afterComment != "" && strings.Contains(afterComment, "=") {
 			parts := strings.SplitN(afterComment, "=", 2)

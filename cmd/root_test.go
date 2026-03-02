@@ -10,8 +10,8 @@ import (
 
 func TestRootCommand(t *testing.T) {
 	t.Run("root command has correct metadata", func(t *testing.T) {
-		if rootCmd.Use != "openenvx" {
-			t.Errorf("rootCmd.Use = %q, want %q", rootCmd.Use, "openenvx")
+		if rootCmd.Use != "envx" {
+			t.Errorf("rootCmd.Use = %q, want %q", rootCmd.Use, "envx")
 		}
 
 		if rootCmd.Short != "Secure environment variable management" {
@@ -66,7 +66,7 @@ func TestRootCommand(t *testing.T) {
 
 	t.Run("root command long description contains expected content", func(t *testing.T) {
 		expectedStrings := []string{
-			"OpenEnvX",
+			"EnvX",
 			"encryption",
 			"age",
 			"init",

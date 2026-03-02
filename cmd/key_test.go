@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/xmazu/openenvx/internal/config"
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/config"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 func TestRunKeyAdd(t *testing.T) {
@@ -23,7 +23,7 @@ func TestRunKeyAdd(t *testing.T) {
 		}
 		t.Setenv(config.ConfigDirEnv, tmpDir)
 		identity, _ := crypto.GenerateAgeKeyPair()
-		t.Setenv("OPENENVX_PRIVATE_KEY", identity.String())
+		t.Setenv("ENVX_PRIVATE_KEY", identity.String())
 
 		// Change to tmpDir so FindRoot finds it
 		oldWd, _ := os.Getwd()
@@ -90,12 +90,12 @@ func TestRunKeyAdd(t *testing.T) {
 	t.Run("errors when no input and env unset", func(t *testing.T) {
 		keyAddFile = ""
 		keyAddEnv = false
-		t.Setenv("OPENENVX_PRIVATE_KEY", "")
+		t.Setenv("ENVX_PRIVATE_KEY", "")
 		keyAddEnv = true
 
 		err := runKeyAdd(nil, nil)
 		if err == nil {
-			t.Error("runKeyAdd() should error when OPENENVX_PRIVATE_KEY unset")
+			t.Error("runKeyAdd() should error when ENVX_PRIVATE_KEY unset")
 		}
 	})
 }

@@ -1,7 +1,6 @@
-# OpenEnvX
+# EnvX
 
 **.env enhanced. Secured. Local-first. Agent-ready by design.**
-
 
 Zero-configuration secret management. Your keys, your data-Vault-style envelope encryption that runs on your machine. Built for developers and AI agents.
 
@@ -11,32 +10,31 @@ Made for people, by people. Fully open source.
 
 > ⚠️ **Early Development**: This tool is currently in early development. Features and APIs may change.
 
-
 ---
 
 ## Quick Start
 
 ```bash
 # Install (macOS and Linux)
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/xmazu/openenvx/main/scripts/install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/xmazu/envx/main/scripts/install.sh)"
 
 # Initialize workspace (creates keypair + encrypts .env files)
-openenvx init
+envx init
 
 # Store a secret
-openenvx set DATABASE_URL
+envx set DATABASE_URL
 
 # Run with decrypted env
-openenvx run -- npm start
+envx run -- npm start
 ```
 
-Or install via Go: `go install github.com/xmazu/openenvx@latest`
+Or install via Go: `go install github.com/xmazu/envx@latest`
 
 ---
 
 ## Variable expansion & command substitution
 
-Values in your `.env` are expanded when you run commands or use `openenvx get`. Two forms are supported:
+Values in your `.env` are expanded when you run commands or use `envx get`. Two forms are supported:
 
 ### Variable references: `${VAR}`
 
@@ -75,10 +73,10 @@ Compose env from several files; later files override earlier ones unless you avo
 
 ```bash
 # Default: later files only fill in missing keys (no override)
-openenvx run -f .env -f .env.local -- npm start
+envx run -f .env -f .env.local -- npm start
 
 # Let later files and --env override earlier values
-openenvx run -f .env -f .env.local --overload -- npm start
+envx run -f .env -f .env.local --overload -- npm start
 ```
 
 Handy for local overrides (e.g. `.env.local`), per-environment files (e.g. `.env.production`), or splitting shared vs. secret keys.
@@ -86,7 +84,7 @@ Handy for local overrides (e.g. `.env.local`), per-environment files (e.g. `.env
 ### Override or add vars at run time
 
 ```bash
-openenvx run -e NODE_ENV=test -e PORT=3001 -- npm test
+envx run -e NODE_ENV=test -e PORT=3001 -- npm test
 ```
 
 Combine with `-f` and `--overload` so `-e` can override file values when needed.
@@ -95,10 +93,10 @@ Combine with `-f` and `--overload` so `-e` can override file values when needed.
 
 ```bash
 # Raw value (e.g. for scripts)
-export API_KEY=$(openenvx get API_KEY)
+export API_KEY=$(envx get API_KEY)
 
 # Shell-friendly (key=value)
-eval "$(openenvx get --format eval)"
+eval "$(envx get --format eval)"
 ```
 
 ### Redact secrets in command output
@@ -106,7 +104,7 @@ eval "$(openenvx get --format eval)"
 Useful when an agent or log should see that a secret is present but not its value:
 
 ```bash
-openenvx run --redact -- npm start
+envx run --redact -- npm start
 ```
 
 Output is rewritten so secret values appear as `[REDACTED:KEY]`.
@@ -116,13 +114,13 @@ Output is rewritten so secret values appear as `[REDACTED:KEY]`.
 Fail if any env file is missing or decryption fails (e.g. in CI):
 
 ```bash
-openenvx run -f .env -f .env.production --strict -- npm start
+envx run -f .env -f .env.production --strict -- npm start
 ```
 
 Auto-restart when `.env` changes (default for dev-server-like commands); disable with `--no-watch`:
 
 ```bash
-openenvx run --no-watch -- python server.py
+envx run --no-watch -- python server.py
 ```
 
 ---
@@ -153,17 +151,17 @@ API_KEY=envx:<base64-wrapped-dek>:<base64-ciphertext>
 
 ### Key Storage
 
-- **Public key**: Stored in `.openenvx.yaml` at workspace root (safe to commit)
-- **Private key**: Stored in `~/.config/openenvx/keys.yaml` (never commit)
-- **Resolution**: Environment variable `OPENENVX_PRIVATE_KEY` takes precedence
+- **Public key**: Stored in `.envx.yaml` at workspace root (safe to commit)
+- **Private key**: Stored in `~/.config/envx/keys.yaml` (never commit)
+- **Resolution**: Environment variable `ENVX_PRIVATE_KEY` takes precedence
 
 ### Audit Logging
 
 All envelope and secret operations logged with hash-chaining:
 
 ```bash
-openenvx audit show --last=20
-openenvx audit verify
+envx audit show --last=20
+envx audit verify
 ```
 
 Stored in `.envx/audit.logl`. Each entry includes a SHA-256 hash of the previous entry for tamper detection.
@@ -176,13 +174,13 @@ Scan your repository for leaked secrets before they reach git:
 
 ```bash
 # Scan current directory
-openenvx scan
+envx scan
 
 # Scan specific path
-openenvx scan --path ./src
+envx scan --path ./src
 
 # CI-friendly (fails on high-severity findings)
-openenvx scan
+envx scan
 ```
 
 Detects API keys, tokens, passwords, and other sensitive patterns. Respects `.gitignore` exclusions.
@@ -199,4 +197,4 @@ A: Your secrets are gone. There's no backdoor. Store your private key safely (1P
 
 ---
 
-MIT License · [GitHub](https://github.com/xmazu/openenvx)
+MIT License · [GitHub](https://github.com/xmazu/envx)

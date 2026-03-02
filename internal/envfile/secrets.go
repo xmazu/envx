@@ -1,7 +1,7 @@
 package envfile
 
 import (
-	"github.com/xmazu/openenvx/internal/scanner"
+	"github.com/xmazu/envx/internal/scanner"
 )
 
 type CommentedSecret struct {

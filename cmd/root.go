@@ -8,12 +8,12 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "openenvx",
+	Use:   "envx",
 	Short: "Secure environment variable management",
 	SilenceUsage:  true,
 	SilenceErrors: true,
-	Long: `OpenEnvX - Production-grade, zero-config CLI for local env vars with age (X25519) encryption.
-Opinionated: one workflow. Share .env in the repo; share the private key with your team (e.g. 1Password)-teammates run ` + "`openenvx key add`" + ` then ` + "`openenvx run -- ...`" + `.
+	Long: `EnvX - Production-grade, zero-config CLI for local env vars with age (X25519) encryption.
+Opinionated: one workflow. Share .env in the repo; share the private key with your team (e.g. 1Password)-teammates run ` + "`envx key add`" + ` then ` + "`envx run -- ...`" + `.
 
 ENCRYPTION:
 
@@ -23,22 +23,22 @@ ENCRYPTION:
 
 EXAMPLES:
 
-  openenvx init
-  openenvx set DATABASE_URL=postgres://user:pass@localhost/db
-  openenvx run -- node server.js
+  envx init
+  envx set DATABASE_URL=postgres://user:pass@localhost/db
+  envx run -- node server.js
 
   # New teammate: paste key from 1Password, then run
-  openenvx key add
-  openenvx run -- npm start
+  envx key add
+  envx run -- npm start
 
-  # In CI: set OPENENVX_PRIVATE_KEY and run the same command.
+  # In CI: set ENVX_PRIVATE_KEY and run the same command.
 
-Get started: openenvx init --help`,
+Get started: envx init --help`,
 }
 
 func init() {
 	// Cobra adds --version when Version is set; use a clear template
-	rootCmd.SetVersionTemplate("openenvx version {{.Version}}\n")
+	rootCmd.SetVersionTemplate("envx version {{.Version}}\n")
 }
 
 // SetVersion sets the version string shown by --version (e.g. from ldflags).

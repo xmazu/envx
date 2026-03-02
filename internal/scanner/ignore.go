@@ -144,7 +144,7 @@ func (m *IgnoreMatcher) ShouldIgnore(relPath string, isDir bool) bool {
 
 func DefaultScanExcludedFiles() []string {
 	return []string{
-		".openenvx.yaml",
+		".envx.yaml",
 		"go.mod",
 		"go.sum",
 		"package-lock.json",

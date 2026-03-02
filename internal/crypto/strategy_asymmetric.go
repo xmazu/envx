@@ -8,7 +8,7 @@ import (
 
 	"filippo.io/age"
 
-	"github.com/xmazu/openenvx/internal/config"
+	"github.com/xmazu/envx/internal/config"
 )
 
 type AsymmetricStrategy struct {
@@ -34,12 +34,12 @@ func (a *AsymmetricStrategy) GetMasterKey() (*MasterKey, error) {
 	}
 
 	if a.identity == nil {
-		return nil, fmt.Errorf("private key not available - set OPENENVX_PRIVATE_KEY environment variable")
+		return nil, fmt.Errorf("private key not available - set ENVX_PRIVATE_KEY environment variable")
 	}
 
 	identityBytes := []byte(a.identity.String())
 	h := hmac.New(sha256.New, identityBytes)
-	h.Write([]byte("openenvx-master-key-derivation"))
+	h.Write([]byte("envx-master-key-derivation"))
 	key := h.Sum(nil)[:masterKeySize]
 
 	a.cachedKey = &MasterKey{key: key}
@@ -63,7 +63,7 @@ func ParseAgeIdentity(identityStr string) (*age.X25519Identity, error) {
 }
 
 func GetPrivateKey(workspacePath string) (*age.X25519Identity, bool) {
-	if keyStr := os.Getenv("OPENENVX_PRIVATE_KEY"); keyStr != "" {
+	if keyStr := os.Getenv("ENVX_PRIVATE_KEY"); keyStr != "" {
 		identity, err := ParseAgeIdentity(keyStr)
 		if err == nil {
 			return identity, true

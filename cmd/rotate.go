@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/envfile"
-	"github.com/xmazu/openenvx/internal/runenv"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/envfile"
+	"github.com/xmazu/envx/internal/runenv"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 var rotateCmd = &cobra.Command{

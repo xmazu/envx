@@ -51,10 +51,10 @@ jobs:
           BUILD_TIME: ${{ steps.vars.outputs.build_time }}
         run: |
           mkdir -p dist
-          GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.Version=$VERSION -X main.BuildTime=$BUILD_TIME" -o dist/openenvx-darwin-amd64 .
-          GOOS=darwin GOARCH=arm64 go build -ldflags "-X main.Version=$VERSION -X main.BuildTime=$BUILD_TIME" -o dist/openenvx-darwin-arm64 .
-          GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=$VERSION -X main.BuildTime=$BUILD_TIME" -o dist/openenvx-linux-amd64 .
-          GOOS=linux GOARCH=arm64 go build -ldflags "-X main.Version=$VERSION -X main.BuildTime=$BUILD_TIME" -o dist/openenvx-linux-arm64 .
+          GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.Version=$VERSION -X main.BuildTime=$BUILD_TIME" -o dist/envx-darwin-amd64 .
+          GOOS=darwin GOARCH=arm64 go build -ldflags "-X main.Version=$VERSION -X main.BuildTime=$BUILD_TIME" -o dist/envx-darwin-arm64 .
+          GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=$VERSION -X main.BuildTime=$BUILD_TIME" -o dist/envx-linux-amd64 .
+          GOOS=linux GOARCH=arm64 go build -ldflags "-X main.Version=$VERSION -X main.BuildTime=$BUILD_TIME" -o dist/envx-linux-arm64 .
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -81,9 +81,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            openenvx-darwin-amd64
-            openenvx-darwin-arm64
-            openenvx-linux-amd64
-            openenvx-linux-arm64
+            envx-darwin-amd64
+            envx-darwin-arm64
+            envx-linux-amd64
+            envx-linux-arm64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

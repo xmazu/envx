@@ -8,9 +8,9 @@ import (
 	"syscall"
 
 	"github.com/spf13/cobra"
-	"github.com/xmazu/openenvx/internal/runenv"
-	"github.com/xmazu/openenvx/internal/watch"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/runenv"
+	"github.com/xmazu/envx/internal/watch"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 var runCmd = &cobra.Command{
@@ -46,7 +46,7 @@ func init() {
 
 func runRun(cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("no command specified. Use: openenvx run -- your-command")
+		return fmt.Errorf("no command specified. Use: envx run -- your-command")
 	}
 
 	files := runFiles

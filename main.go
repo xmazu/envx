@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/xmazu/openenvx/cmd"
+	"github.com/xmazu/envx/cmd"
 )
 
 var (

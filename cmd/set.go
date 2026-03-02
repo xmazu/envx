@@ -8,11 +8,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/envfile"
-	"github.com/xmazu/openenvx/internal/runenv"
-	"github.com/xmazu/openenvx/internal/tui"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/envfile"
+	"github.com/xmazu/envx/internal/runenv"
+	"github.com/xmazu/envx/internal/tui"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 var setCmd = &cobra.Command{
@@ -70,7 +70,7 @@ func runSet(cmd *cobra.Command, args []string) error {
 
 func ValidateKey(key string) error {
 	if strings.Contains(key, "=") {
-		return fmt.Errorf("invalid key: use openenvx set KEY (value is read after the command starts)")
+		return fmt.Errorf("invalid key: use envx set KEY (value is read after the command starts)")
 	}
 	return nil
 }

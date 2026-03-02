@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/envfile"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/envfile"
 )
 
 func TestIsEnvFileEncrypted(t *testing.T) {
@@ -58,44 +58,44 @@ func TestIsEnvFileEncrypted(t *testing.T) {
 	})
 }
 
-func TestErrEncryptedEnvWithoutOpenenvx(t *testing.T) {
-	t.Run("returns error when no .openenvx.yaml and at least one .env encrypted", func(t *testing.T) {
+func TestErrEncryptedEnvWithoutEnvx(t *testing.T) {
+	t.Run("returns error when no .envx.yaml and at least one .env encrypted", func(t *testing.T) {
 		tmp := t.TempDir()
 		envPath := filepath.Join(tmp, ".env")
 		if err := os.WriteFile(envPath, []byte("KEY=envx:abc:def\n"), 0644); err != nil {
 			t.Fatal(err)
 		}
-		err := ErrEncryptedEnvWithoutOpenenvx(tmp)
+		err := ErrEncryptedEnvWithoutEnvx(tmp)
 		if err == nil {
-			t.Fatal("ErrEncryptedEnvWithoutOpenenvx = nil, want error")
+			t.Fatal("ErrEncryptedEnvWithoutEnvx = nil, want error")
 		}
-		if !containsSubstring(err.Error(), ".openenvx.yaml") {
-			t.Errorf("error should mention .openenvx.yaml: %s", err.Error())
+		if !containsSubstring(err.Error(), ".envx.yaml") {
+			t.Errorf("error should mention .envx.yaml: %s", err.Error())
 		}
 	})
 
-	t.Run("returns nil when .openenvx.yaml exists even if .env encrypted", func(t *testing.T) {
+	t.Run("returns nil when .envx.yaml exists even if .env encrypted", func(t *testing.T) {
 		tmp := t.TempDir()
-		if err := os.WriteFile(filepath.Join(tmp, ".openenvx.yaml"), []byte("public_key: age1xxx\n"), 0644); err != nil {
+		if err := os.WriteFile(filepath.Join(tmp, ".envx.yaml"), []byte("public_key: age1xxx\n"), 0644); err != nil {
 			t.Fatal(err)
 		}
 		if err := os.WriteFile(filepath.Join(tmp, ".env"), []byte("KEY=envx:abc:def\n"), 0644); err != nil {
 			t.Fatal(err)
 		}
-		err := ErrEncryptedEnvWithoutOpenenvx(tmp)
+		err := ErrEncryptedEnvWithoutEnvx(tmp)
 		if err != nil {
-			t.Errorf("ErrEncryptedEnvWithoutOpenenvx = %v, want nil", err)
+			t.Errorf("ErrEncryptedEnvWithoutEnvx = %v, want nil", err)
 		}
 	})
 
-	t.Run("returns nil when no .openenvx.yaml and no encrypted .env", func(t *testing.T) {
+	t.Run("returns nil when no .envx.yaml and no encrypted .env", func(t *testing.T) {
 		tmp := t.TempDir()
 		if err := os.WriteFile(filepath.Join(tmp, ".env"), []byte("KEY=plain\n"), 0644); err != nil {
 			t.Fatal(err)
 		}
-		err := ErrEncryptedEnvWithoutOpenenvx(tmp)
+		err := ErrEncryptedEnvWithoutEnvx(tmp)
 		if err != nil {
-			t.Errorf("ErrEncryptedEnvWithoutOpenenvx = %v, want nil", err)
+			t.Errorf("ErrEncryptedEnvWithoutEnvx = %v, want nil", err)
 		}
 	})
 }
