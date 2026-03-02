@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"github.com/spf13/cobra"
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/envfile"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/envfile"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 func TestRunRotate(t *testing.T) {
@@ -38,8 +38,8 @@ func TestRunRotate(t *testing.T) {
 		t.Fatalf("Save() error = %v", err)
 	}
 
-	os.Setenv("OPENENVX_PRIVATE_KEY", identity.String())
-	defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+	os.Setenv("ENVX_PRIVATE_KEY", identity.String())
+	defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 	prev, _ := os.Getwd()
 	if err := os.Chdir(tmpDir); err != nil {

@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/xmazu/openenvx/internal/config"
-	"github.com/xmazu/openenvx/internal/envfile"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/config"
+	"github.com/xmazu/envx/internal/envfile"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 func TestRunUnmigrate(t *testing.T) {
@@ -85,7 +85,7 @@ func TestRunUnmigrate(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		// Create .openenvx.yaml manually to simulate initialized workspace
+		// Create .envx.yaml manually to simulate initialized workspace
 		if err := workspace.WriteWorkspaceFile(tmpDir, &workspace.WorkspaceConfig{PublicKey: "age1test123"}); err != nil {
 			t.Fatal(err)
 		}
@@ -123,7 +123,7 @@ func TestRunUnmigrate(t *testing.T) {
 		}
 	})
 
-	t.Run("removes .openenvx with flag", func(t *testing.T) {
+	t.Run("removes .envx with flag", func(t *testing.T) {
 		tmpDir := t.TempDir()
 		configDir := t.TempDir()
 		t.Setenv(config.ConfigDirEnv, configDir)
@@ -146,17 +146,17 @@ func TestRunUnmigrate(t *testing.T) {
 		}
 
 		// Set flag and unmigrate
-		unmigrateRemoveOpenenvx = true
-		defer func() { unmigrateRemoveOpenenvx = false }()
+		unmigrateRemoveEnvx = true
+		defer func() { unmigrateRemoveEnvx = false }()
 
 		if err := runUnmigrate(nil, nil); err != nil {
 			t.Fatalf("runUnmigrate() error = %v", err)
 		}
 
-		// Verify .openenvx was removed
-		workspacePath := filepath.Join(tmpDir, ".openenvx.yaml")
+		// Verify .envx was removed
+		workspacePath := filepath.Join(tmpDir, workspace.WorkspaceFileName)
 		if _, err := os.Stat(workspacePath); !os.IsNotExist(err) {
-			t.Error(".openenvx.yaml should be removed")
+			t.Error(".envx.yaml should be removed")
 		}
 	})
 }

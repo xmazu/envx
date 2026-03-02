@@ -11,12 +11,12 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/xmazu/openenvx/internal/crypto"
+	"github.com/xmazu/envx/internal/crypto"
 )
 
 const (
 	prefix          = "envelope:v1:"
-	hkdfInfo        = "openenvx-envelope-v1"
+	hkdfInfo        = "envx-envelope-v1"
 	unwrapSecretLen = 16
 	sessionKeyLen   = 32
 )

@@ -8,21 +8,21 @@ import (
 	"time"
 
 	mcpsdk "github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/xmazu/openenvx/internal/audit"
-	"github.com/xmazu/openenvx/internal/envelope"
-	"github.com/xmazu/openenvx/internal/runenv"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/audit"
+	"github.com/xmazu/envx/internal/envelope"
+	"github.com/xmazu/envx/internal/runenv"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 func Run(ctx context.Context) error {
 	server := mcpsdk.NewServer(&mcpsdk.Implementation{
-		Name:    "openenvx",
+		Name:    "envx",
 		Version: "0.1.0",
 	}, nil)
 
 	mcpsdk.AddTool(server, &mcpsdk.Tool{
 		Name:        "create_secret",
-		Description: "Create or update a secret in the project's .env file. Use when the agent decides to store a new secret (e.g. API key, token). Finds .env in the given directory or parent directories. Requires the project private key to be available (OPENENVX_PRIVATE_KEY or openenvx key add). Returns ok and path only; never returns or echoes the secret value.",
+		Description: "Create or update a secret in the project's .env file. Use when the agent decides to store a new secret (e.g. API key, token). Finds .env in the given directory or parent directories. Requires the project private key to be available (ENVX_PRIVATE_KEY or envx key add). Returns ok and path only; never returns or echoes the secret value.",
 	}, func(ctx context.Context, req *mcpsdk.CallToolRequest, args struct {
 		Key     string `json:"key" jsonschema:"environment variable name (e.g. API_KEY, DATABASE_URL)"`
 		Value   string `json:"value" jsonschema:"secret value to store (will be encrypted)"`
@@ -43,7 +43,7 @@ func Run(ctx context.Context) error {
 
 	mcpsdk.AddTool(server, &mcpsdk.Tool{
 		Name:        "list_keys",
-		Description: "List key names for all encrypted variables in the project's .env. Returns keys and envPath only; never returns values. Use to see what secrets exist so you can suggest openenvx run --redact -- ... or ask the user to add a key.",
+		Description: "List key names for all encrypted variables in the project's .env. Returns keys and envPath only; never returns values. Use to see what secrets exist so you can suggest envx run --redact -- ... or ask the user to add a key.",
 	}, func(ctx context.Context, req *mcpsdk.CallToolRequest, args struct {
 		Workdir string `json:"workdir" jsonschema:"directory to search for .env (default: current)"`
 	}) (*mcpsdk.CallToolResult, any, error) {

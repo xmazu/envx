@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/envfile"
-	"github.com/xmazu/openenvx/internal/scanner"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/envfile"
+	"github.com/xmazu/envx/internal/scanner"
 )
 
 type EncryptConfig struct {
@@ -40,7 +40,7 @@ func IsEnvFileEncrypted(path string) (bool, error) {
 	return false, nil
 }
 
-func ErrEncryptedEnvWithoutOpenenvx(root string) error {
+func ErrEncryptedEnvWithoutEnvx(root string) error {
 	if WorkspaceFileExists(root) {
 		return nil
 	}
@@ -65,7 +65,7 @@ func ErrEncryptedEnvWithoutOpenenvx(root string) error {
 	if len(encrypted) == 0 {
 		return nil
 	}
-	return fmt.Errorf("encrypted .env file(s) found but no .openenvx.yaml at workspace root: %v. Restore .openenvx.yaml or remove encrypted values before running init", encrypted)
+	return fmt.Errorf("encrypted .env file(s) found but no .envx.yaml at workspace root: %v. Restore .envx.yaml or remove encrypted values before running init", encrypted)
 }
 
 func EncryptEnvFile(path string, cfg *EncryptConfig) (*envfile.File, *FileResult) {

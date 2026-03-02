@@ -3,7 +3,7 @@ package crypto
 import (
 	"testing"
 
-	"github.com/xmazu/openenvx/internal/config"
+	"github.com/xmazu/envx/internal/config"
 )
 
 func TestAsymmetricStrategy(t *testing.T) {
@@ -106,7 +106,7 @@ func TestGetPrivateKey(t *testing.T) {
 		identityStr := identity.String()
 
 		// Set environment variable
-		t.Setenv("OPENENVX_PRIVATE_KEY", identityStr)
+		t.Setenv("ENVX_PRIVATE_KEY", identityStr)
 
 		// Use non-existent path
 		tmpDir := t.TempDir()
@@ -123,7 +123,7 @@ func TestGetPrivateKey(t *testing.T) {
 	})
 
 	t.Run("returns false when neither file nor env var set", func(t *testing.T) {
-		t.Setenv("OPENENVX_PRIVATE_KEY", "")
+		t.Setenv("ENVX_PRIVATE_KEY", "")
 
 		tmpDir := t.TempDir()
 		envPath := tmpDir + "/.env"
@@ -139,7 +139,7 @@ func TestGetPrivateKey(t *testing.T) {
 		identityStr := identity.String()
 
 		// Set environment variable
-		t.Setenv("OPENENVX_PRIVATE_KEY", identityStr)
+		t.Setenv("ENVX_PRIVATE_KEY", identityStr)
 
 		got, ok := GetPrivateKey("")
 		if !ok {
@@ -157,10 +157,10 @@ func TestGetPrivateKey(t *testing.T) {
 		privateKeyStr := identity.String()
 
 		// No env - use global store
-		t.Setenv("OPENENVX_PRIVATE_KEY", "")
+		t.Setenv("ENVX_PRIVATE_KEY", "")
 
 		tmpDir := t.TempDir()
-		t.Setenv("OPENENVX_CONFIG_DIR", tmpDir)
+		t.Setenv("ENVX_CONFIG_DIR", tmpDir)
 		keysFile, err := config.LoadKeysFile()
 		if err != nil {
 			t.Fatalf("LoadKeysFile: %v", err)

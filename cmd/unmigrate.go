@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
-	"github.com/xmazu/openenvx/internal/config"
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/tui"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/config"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/tui"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 var unmigrateCmd = &cobra.Command{
@@ -19,15 +19,15 @@ var unmigrateCmd = &cobra.Command{
 back to plaintext values.
 
 WARNING: This will expose all secret values in plain text. Use with caution.
-The .openenvx.yaml file will be preserved for reference, but can be removed manually
-if you no longer want to use OpenEnvX for this workspace.`,
+The .envx.yaml file will be preserved for reference, but can be removed manually
+if you no longer want to use EnvX for this workspace.`,
 	RunE: runUnmigrate,
 }
 
-var unmigrateRemoveOpenenvx bool
+var unmigrateRemoveEnvx bool
 
 func init() {
-	unmigrateCmd.Flags().BoolVar(&unmigrateRemoveOpenenvx, "remove-openenvx", false, "Remove .openenvx.yaml file after unmigration")
+	unmigrateCmd.Flags().BoolVar(&unmigrateRemoveEnvx, "remove-envx", false, "Remove .envx.yaml file after unmigration")
 	rootCmd.AddCommand(unmigrateCmd)
 }
 
@@ -52,7 +52,7 @@ func runUnmigrate(cmd *cobra.Command, args []string) error {
 
 	key, found := keysFile.Get(wsRoot)
 	if !found || key.Private == "" {
-		return fmt.Errorf("Private key not found for this workspace. Run 'openenvx key add' to add it.")
+		return fmt.Errorf("Private key not found for this workspace. Run 'envx key add' to add it.")
 	}
 
 	identity, err := crypto.ParseAgeIdentity(key.Private)
@@ -113,16 +113,16 @@ func runUnmigrate(cmd *cobra.Command, args []string) error {
 		fmt.Fprintf(os.Stdout, "%s %d file(s) already plaintext (skipped)\n", tui.Muted("•"), totalPlaintext)
 	}
 
-	if unmigrateRemoveOpenenvx {
-		openenvxPath := filepath.Join(wsRoot, workspace.WorkspaceFileName)
-		if err := os.Remove(openenvxPath); err != nil {
+	if unmigrateRemoveEnvx {
+		envxPath := filepath.Join(wsRoot, workspace.WorkspaceFileName)
+		if err := os.Remove(envxPath); err != nil {
 			fmt.Fprintf(os.Stderr, "%s Failed to remove %s: %v\n", tui.Warning("Warning:"), workspace.WorkspaceFileName, err)
 		} else {
 			fmt.Fprintf(os.Stdout, "%s Removed %s file\n", tui.Success("✓"), workspace.WorkspaceFileName)
 		}
 	} else {
 		fmt.Fprintf(os.Stdout, "\n%s The %s file was preserved.\n", tui.Muted("Note:"), workspace.WorkspaceFileName)
-		fmt.Fprintf(os.Stdout, "%s Run with --remove-openenvx to remove it, or delete it manually.\n", tui.Muted("Tip:"))
+		fmt.Fprintf(os.Stdout, "%s Run with --remove-envx to remove it, or delete it manually.\n", tui.Muted("Tip:"))
 	}
 
 	return nil

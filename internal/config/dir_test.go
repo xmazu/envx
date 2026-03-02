@@ -7,7 +7,7 @@ import (
 )
 
 func TestConfigDir(t *testing.T) {
-	t.Run("respects OPENENVX_CONFIG_DIR", func(t *testing.T) {
+	t.Run("respects ENVX_CONFIG_DIR", func(t *testing.T) {
 		tmpDir := t.TempDir()
 		t.Setenv(ConfigDirEnv, tmpDir)
 
@@ -17,7 +17,7 @@ func TestConfigDir(t *testing.T) {
 		}
 	})
 
-	t.Run("uses ~/.config/openenvx when OPENENVX_CONFIG_DIR unset", func(t *testing.T) {
+	t.Run("uses ~/.config/envx when ENVX_CONFIG_DIR unset", func(t *testing.T) {
 		home, err := os.UserHomeDir()
 		if err != nil {
 			t.Skipf("cannot get user home dir: %v", err)

@@ -9,10 +9,10 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/xmazu/openenvx/internal/audit"
-	"github.com/xmazu/openenvx/internal/envelope"
-	"github.com/xmazu/openenvx/internal/runenv"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/audit"
+	"github.com/xmazu/envx/internal/envelope"
+	"github.com/xmazu/envx/internal/runenv"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 var envelopeCmd = &cobra.Command{
@@ -25,9 +25,9 @@ unwrapped without the master private key. Security comes from short TTL
 and minimal scope.
 
 Examples:
-  openenvx envelope create --scope=DATABASE_URL,API_KEY --ttl=1h
-  openenvx envelope run envelope:v1:... -- npm test
-  openenvx envelope inspect envelope:v1:...`,
+  envx envelope create --scope=DATABASE_URL,API_KEY --ttl=1h
+  envx envelope run envelope:v1:... -- npm test
+  envx envelope inspect envelope:v1:...`,
 }
 
 var envelopeCreateCmd = &cobra.Command{
@@ -162,7 +162,7 @@ func runEnvelopeCreate(cmd *cobra.Command, args []string) error {
 
 func runEnvelopeRun(cmd *cobra.Command, args []string) error {
 	if len(args) < 1 {
-		return fmt.Errorf("usage: openenvx envelope run <envelope> -- <command>")
+		return fmt.Errorf("usage: envx envelope run <envelope> -- <command>")
 	}
 
 	envStr := args[0]
@@ -223,7 +223,7 @@ func runEnvelopeRun(cmd *cobra.Command, args []string) error {
 
 func runEnvelopeInspect(cmd *cobra.Command, args []string) error {
 	if len(args) < 1 {
-		return fmt.Errorf("usage: openenvx envelope inspect <envelope>")
+		return fmt.Errorf("usage: envx envelope inspect <envelope>")
 	}
 
 	envStr := args[0]

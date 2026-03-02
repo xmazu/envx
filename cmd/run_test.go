@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/envfile"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/envfile"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 func setupWorkspaceWithKey(t *testing.T, tmpDir string) (string, *crypto.MasterKey) {
@@ -65,8 +65,8 @@ func TestRunRun(t *testing.T) {
 		}
 
 		runFiles = []string{testFile}
-		os.Setenv("OPENENVX_PRIVATE_KEY", identity)
-		defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+		os.Setenv("ENVX_PRIVATE_KEY", identity)
+		defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 		err = runRun(nil, []string{"sh", "-c", "echo $TEST_VAR"})
 		if err != nil {
@@ -83,8 +83,8 @@ func TestRunRun(t *testing.T) {
 		runFiles = []string{testFile}
 		runStrict = true
 		defer func() { runStrict = false }()
-		os.Setenv("OPENENVX_PRIVATE_KEY", identity.String())
-		defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+		os.Setenv("ENVX_PRIVATE_KEY", identity.String())
+		defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 		err := runRun(nil, []string{"echo", "test"})
 		if err == nil {
@@ -113,8 +113,8 @@ func TestRunRun(t *testing.T) {
 		runFiles = []string{testFile}
 		runRedact = true
 		defer func() { runRedact = false }()
-		os.Setenv("OPENENVX_PRIVATE_KEY", identity)
-		defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+		os.Setenv("ENVX_PRIVATE_KEY", identity)
+		defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 		oldStdout := os.Stdout
 		r, w, _ := os.Pipe()
@@ -154,8 +154,8 @@ func TestRunRun(t *testing.T) {
 		}
 
 		runFiles = []string{testFile}
-		os.Setenv("OPENENVX_PRIVATE_KEY", identity)
-		defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+		os.Setenv("ENVX_PRIVATE_KEY", identity)
+		defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 		err := runRun(nil, []string{"echo", "arg1", "arg2"})
 		if err != nil {
@@ -179,8 +179,8 @@ func TestRunRun(t *testing.T) {
 		}
 
 		runFiles = []string{testFile}
-		os.Setenv("OPENENVX_PRIVATE_KEY", identity)
-		defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+		os.Setenv("ENVX_PRIVATE_KEY", identity)
+		defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 		err := runRun(nil, []string{"nonexistent-command-12345"})
 		if err == nil {

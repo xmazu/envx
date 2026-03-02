@@ -188,11 +188,11 @@ func TestDefaultScanExcludedFiles(t *testing.T) {
 		t.Error("DefaultScanExcludedFiles() returned empty slice")
 	}
 
-	// Check that .openenvx.yaml is included
+	// Check that .envx.yaml is included
 	hasOpenenvx := false
 	hasGoMod := false
 	for _, f := range files {
-		if f == ".openenvx.yaml" {
+		if f == ".envx.yaml" {
 			hasOpenenvx = true
 		}
 		if f == "go.mod" {
@@ -200,7 +200,7 @@ func TestDefaultScanExcludedFiles(t *testing.T) {
 		}
 	}
 	if !hasOpenenvx {
-		t.Error("DefaultScanExcludedFiles() should include .openenvx.yaml")
+		t.Error("DefaultScanExcludedFiles() should include .envx.yaml")
 	}
 	if !hasGoMod {
 		t.Error("DefaultScanExcludedFiles() should include go.mod")
@@ -221,7 +221,7 @@ func TestFileMatchesExclude(t *testing.T) {
 		{"path with ** glob nested", "internal/scanner/ignore_test.go", []string{"**/*_test.go"}, true},
 		{"path with directory glob", "test/main.go", []string{"test/*"}, true},
 		{"path with directory glob not matching", "test/sub/main.go", []string{"test/*"}, false},
-		{".openenvx.yaml excluded", ".openenvx.yaml", []string{".openenvx.yaml"}, true},
+		{".envx.yaml excluded", ".envx.yaml", []string{".envx.yaml"}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

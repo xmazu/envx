@@ -53,15 +53,15 @@ func TestExpandMap(t *testing.T) {
 			want: map[string]string{},
 		},
 		{
-			name: "self reference is circular",
-			env:  map[string]string{"A": "${A}"},
+			name:    "self reference is circular",
+			env:     map[string]string{"A": "${A}"},
 			wantErr: "circular reference",
 		},
 		// Command substitution $(...)
 		{
 			name: "command substitution single",
-			env:  map[string]string{"USER": "$(printf %s openenvx)"},
-			want: map[string]string{"USER": "openenvx"},
+			env:  map[string]string{"USER": "$(printf %s envx)"},
+			want: map[string]string{"USER": "envx"},
 		},
 		{
 			name: "command substitution with variable ref",

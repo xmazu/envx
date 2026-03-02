@@ -15,10 +15,10 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/scanner"
-	"github.com/xmazu/openenvx/internal/tui"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/scanner"
+	"github.com/xmazu/envx/internal/tui"
+	"github.com/xmazu/envx/internal/workspace"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -38,7 +38,7 @@ var scanOutput string
 func init() {
 	scanCmd.Flags().StringVarP(&scanPath, "path", "p", "", "Path to scan (default: workspace root if detected, else current directory)")
 	scanCmd.Flags().StringSliceVarP(&scanExclude, "exclude", "e", []string{".git", "node_modules", "vendor"}, "Directories to exclude")
-	scanCmd.Flags().StringSliceVarP(&scanExcludeFiles, "exclude-files", "E", nil, "Additional file names or glob patterns to exclude (matched against base name). Defaults from .openenvx.yaml scan.exclude_files, or go.mod, go.sum if no .openenvx.yaml")
+	scanCmd.Flags().StringSliceVarP(&scanExcludeFiles, "exclude-files", "E", nil, "Additional file names or glob patterns to exclude (matched against base name). Defaults from .envx.yaml scan.exclude_files, or go.mod, go.sum if no .envx.yaml")
 	scanCmd.Flags().StringVar(&scanIgnoreMismatch, "ignore-mismatch", "off", "Deprecated: no longer has any effect since only .gitignore is used for exclusions")
 	scanCmd.Flags().StringVarP(&scanOutput, "output", "o", "", "Output format: default (human), json (machine-readable for editors)")
 	rootCmd.AddCommand(scanCmd)

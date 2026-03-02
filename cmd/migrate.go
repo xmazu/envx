@@ -6,11 +6,11 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
-	"github.com/xmazu/openenvx/internal/config"
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/envfile"
-	"github.com/xmazu/openenvx/internal/tui"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/config"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/envfile"
+	"github.com/xmazu/envx/internal/tui"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 var migrateCmd = &cobra.Command{
@@ -38,7 +38,7 @@ func runMigrate(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("get workspace key: %w", err)
 	}
 	if wsKey == "" {
-		return fmt.Errorf("No workspace key found. Run 'openenvx init' first.")
+		return fmt.Errorf("No workspace key found. Run 'envx init' first.")
 	}
 
 	keysFile, err := config.LoadKeysFile()
@@ -48,7 +48,7 @@ func runMigrate(cmd *cobra.Command, args []string) error {
 
 	key, found := keysFile.Get(wsRoot)
 	if !found || key.Private == "" {
-		return fmt.Errorf("Private key not found for this workspace. Run 'openenvx key add' to add it.")
+		return fmt.Errorf("Private key not found for this workspace. Run 'envx key add' to add it.")
 	}
 
 	identity, err := crypto.ParseAgeIdentity(key.Private)

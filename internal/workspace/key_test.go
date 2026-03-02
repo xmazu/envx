@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetWorkspacePublicKey(t *testing.T) {
-	t.Run("reads from .openenvx.yaml file", func(t *testing.T) {
+	t.Run("reads from .envx.yaml file", func(t *testing.T) {
 		tmp := t.TempDir()
 		wc := &WorkspaceConfig{PublicKey: "age1abc"}
 		if err := WriteWorkspaceFile(tmp, wc); err != nil {

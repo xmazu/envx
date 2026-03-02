@@ -8,16 +8,16 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/xmazu/openenvx/internal/config"
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/tui"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/config"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/tui"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 var keyCmd = &cobra.Command{
 	Use:   "key",
-	Short: "Manage private keys in OpenEnvX global config",
-	Long: `Manage private keys stored in the OpenEnvX config directory (~/.config/openenvx/keys.yaml).
+	Short: "Manage private keys in EnvX global config",
+	Long: `Manage private keys stored in the EnvX config directory (~/.config/envx/keys.yaml).
 Keys are stored by workspace path, so each workspace has its own unique keypair.`,
 }
 
@@ -29,17 +29,17 @@ var (
 
 var keyAddCmd = &cobra.Command{
 	Use:   "add",
-	Short: "Add a private key to the OpenEnvX config",
+	Short: "Add a private key to the EnvX config",
 	Long: `Add a private key to the global key store for the current workspace.
-The key is stored under the workspace path, so openenvx run will find it
+The key is stored under the workspace path, so envx run will find it
 when running from this workspace.
 
 Use this when a teammate shared the project key with you (e.g. from 1Password).
 
 Input (one of):
   - interactive: run without flags and paste when prompted (input is hidden)
-  - --file path to file containing OPENENVX_PRIVATE_KEY=... or the raw key
-  - --env to read from OPENENVX_PRIVATE_KEY environment variable`,
+  - --file path to file containing ENVX_PRIVATE_KEY=... or the raw key
+  - --env to read from ENVX_PRIVATE_KEY environment variable`,
 	RunE: runKeyAdd,
 }
 
@@ -48,7 +48,7 @@ var keyShowCmd = &cobra.Command{
 	Short: "Show private key for the current repository",
 	Long: `Find the workspace root, then print the matching private key from
 the global key store. Use when you need the key for this repo
-(e.g. export OPENENVX_PRIVATE_KEY=$(openenvx key show)).`,
+(e.g. export ENVX_PRIVATE_KEY=$(envx key show)).`,
 	RunE: runKeyShow,
 }
 
@@ -58,7 +58,7 @@ func init() {
 	keyCmd.AddCommand(keyShowCmd)
 
 	keyAddCmd.Flags().StringVarP(&keyAddFile, "file", "f", "", "Read private key from file")
-	keyAddCmd.Flags().BoolVar(&keyAddEnv, "env", false, "Read private key from OPENENVX_PRIVATE_KEY environment variable")
+	keyAddCmd.Flags().BoolVar(&keyAddEnv, "env", false, "Read private key from ENVX_PRIVATE_KEY environment variable")
 	keyShowCmd.Flags().StringVarP(&keyShowWorkdir, "dir", "C", "", "Directory to search for workspace (default: current)")
 }
 
@@ -68,9 +68,9 @@ func runKeyAdd(cmd *cobra.Command, args []string) error {
 
 	switch {
 	case keyAddEnv:
-		keyStr := os.Getenv("OPENENVX_PRIVATE_KEY")
+		keyStr := os.Getenv("ENVX_PRIVATE_KEY")
 		if keyStr == "" {
-			return fmt.Errorf("OPENENVX_PRIVATE_KEY is not set")
+			return fmt.Errorf("ENVX_PRIVATE_KEY is not set")
 		}
 		raw = keyStr
 	case keyAddFile != "":
@@ -161,7 +161,7 @@ func runKeyShow(cmd *cobra.Command, args []string) error {
 
 	key, found := keysFile.Get(wsRoot)
 	if !found {
-		return fmt.Errorf("private key not found for this workspace - add it with 'openenvx key add'")
+		return fmt.Errorf("private key not found for this workspace - add it with 'envx key add'")
 	}
 	fmt.Println(key.Private)
 	return nil

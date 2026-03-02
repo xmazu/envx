@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/xmazu/openenvx/internal/runenv"
+	"github.com/xmazu/envx/internal/runenv"
 )
 
 var listCmd = &cobra.Command{
@@ -16,8 +16,8 @@ This shows key names only - no values are displayed. Use this to see what
 secrets exist without decrypting them.
 
 Examples:
-  openenvx list                    # List keys in .env
-  openenvx list --file .env.local  # List keys in specific file`,
+  envx list                    # List keys in .env
+  envx list --file .env.local  # List keys in specific file`,
 	RunE: runList,
 }
 

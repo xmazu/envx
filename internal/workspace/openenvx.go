@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/xmazu/openenvx/internal/storage"
+	"github.com/xmazu/envx/internal/storage"
 )
 
-const WorkspaceFileName = ".openenvx.yaml"
+const WorkspaceFileName = ".envx.yaml"
 
 type ScanConfig struct {
 	ExcludeFiles []string `yaml:"exclude_files"`
@@ -24,7 +24,7 @@ func ReadWorkspaceFile(dir string) (*WorkspaceConfig, error) {
 
 	var cfg WorkspaceConfig
 	if err := file.Load(&cfg); err != nil {
-		return nil, fmt.Errorf("no .openenvx.yaml file in %s", dir)
+		return nil, fmt.Errorf("no .envx.yaml file in %s", dir)
 	}
 	return &cfg, nil
 }

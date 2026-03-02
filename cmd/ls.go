@@ -8,8 +8,8 @@ import (
 	"sort"
 
 	"github.com/spf13/cobra"
-	"github.com/xmazu/openenvx/internal/tui"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/tui"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 var lsCmd = &cobra.Command{

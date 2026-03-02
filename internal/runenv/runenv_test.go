@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"testing"
 
-	"github.com/xmazu/openenvx/internal/crypto"
-	"github.com/xmazu/openenvx/internal/envfile"
-	"github.com/xmazu/openenvx/internal/workspace"
+	"github.com/xmazu/envx/internal/crypto"
+	"github.com/xmazu/envx/internal/envfile"
+	"github.com/xmazu/envx/internal/workspace"
 )
 
 func TestFindEnvInParents(t *testing.T) {
@@ -253,18 +253,18 @@ func TestLoadDecryptedEnv(t *testing.T) {
 	t.Run("file without private key returns error", func(t *testing.T) {
 		path := filepath.Join(tmpDir, "nokey.env")
 		makeEncryptedEnvFile(t, tmpDir, path, map[string]string{"X": "y"})
-		os.Unsetenv("OPENENVX_PRIVATE_KEY")
+		os.Unsetenv("ENVX_PRIVATE_KEY")
 		_, err := LoadDecryptedEnv(path, tmpDir)
 		if err == nil {
 			t.Error("LoadDecryptedEnv() should error when private key not available")
 		}
 	})
 
-	t.Run("success with OPENENVX_PRIVATE_KEY", func(t *testing.T) {
+	t.Run("success with ENVX_PRIVATE_KEY", func(t *testing.T) {
 		path := filepath.Join(tmpDir, "good.env")
 		keyStr := makeEncryptedEnvFile(t, tmpDir, path, map[string]string{"TEST_VAR": "secret-val", "OTHER": "other-val"})
-		os.Setenv("OPENENVX_PRIVATE_KEY", keyStr)
-		defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+		os.Setenv("ENVX_PRIVATE_KEY", keyStr)
+		defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 		decrypted, err := LoadDecryptedEnv(path, tmpDir)
 		if err != nil {
@@ -283,8 +283,8 @@ func TestSetSecret(t *testing.T) {
 	tmpDir := t.TempDir()
 	path := filepath.Join(tmpDir, ".env")
 	keyStr := makeEncryptedEnvFile(t, tmpDir, path, map[string]string{"EXISTING": "old"})
-	os.Setenv("OPENENVX_PRIVATE_KEY", keyStr)
-	defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+	os.Setenv("ENVX_PRIVATE_KEY", keyStr)
+	defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 	if err := SetSecret(path, "NEW_KEY", "new-secret-value"); err != nil {
 		t.Fatalf("SetSecret() error = %v", err)
@@ -309,8 +309,8 @@ func TestRunWithEnv(t *testing.T) {
 	tmpDir := t.TempDir()
 	path := filepath.Join(tmpDir, "run.env")
 	keyStr := makeEncryptedEnvFile(t, tmpDir, path, map[string]string{"ECHO_VAR": "ok"})
-	os.Setenv("OPENENVX_PRIVATE_KEY", keyStr)
-	defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+	os.Setenv("ENVX_PRIVATE_KEY", keyStr)
+	defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 	decrypted, err := LoadDecryptedEnv(path, tmpDir)
 	if err != nil {
@@ -382,8 +382,8 @@ func TestGetMaskedSecret(t *testing.T) {
 	tmpDir := t.TempDir()
 	path := filepath.Join(tmpDir, ".env")
 	keyStr := makeEncryptedEnvFile(t, tmpDir, path, map[string]string{"API_KEY": "sk_live_abc123"})
-	os.Setenv("OPENENVX_PRIVATE_KEY", keyStr)
-	defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+	os.Setenv("ENVX_PRIVATE_KEY", keyStr)
+	defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 	masked, length, err := GetMaskedSecret(path, "API_KEY")
 	if err != nil {
@@ -411,8 +411,8 @@ func TestRunWithEnvRedacted(t *testing.T) {
 	path := filepath.Join(tmpDir, ".env")
 	secret := "my-secret-value"
 	keyStr := makeEncryptedEnvFile(t, tmpDir, path, map[string]string{"REDACT_KEY": secret})
-	os.Setenv("OPENENVX_PRIVATE_KEY", keyStr)
-	defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+	os.Setenv("ENVX_PRIVATE_KEY", keyStr)
+	defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 	oldStdout := os.Stdout
 	oldStderr := os.Stderr
@@ -577,8 +577,8 @@ func TestDeleteSecret(t *testing.T) {
 	tmpDir := t.TempDir()
 	path := filepath.Join(tmpDir, ".env")
 	keyStr := makeEncryptedEnvFile(t, tmpDir, path, map[string]string{"TO_DELETE": "secret", "TO_KEEP": "keep"})
-	os.Setenv("OPENENVX_PRIVATE_KEY", keyStr)
-	defer os.Unsetenv("OPENENVX_PRIVATE_KEY")
+	os.Setenv("ENVX_PRIVATE_KEY", keyStr)
+	defer os.Unsetenv("ENVX_PRIVATE_KEY")
 
 	t.Run("deletes existing key", func(t *testing.T) {
 		deleted, err := DeleteSecret(path, "TO_DELETE")
@@ -694,54 +694,54 @@ func TestWorkspaceFindRoot(t *testing.T) {
 
 func TestMergeOverlayEnv(t *testing.T) {
 	tests := []struct {
-		name    string
-		env     map[string]string
-		overlay []string
+		name     string
+		env      map[string]string
+		overlay  []string
 		overload bool
-		want    map[string]string
-		wantErr bool
+		want     map[string]string
+		wantErr  bool
 	}{
 		{
-			name:    "empty overlay leaves env unchanged",
-			env:     map[string]string{"A": "1"},
-			overlay: nil,
+			name:     "empty overlay leaves env unchanged",
+			env:      map[string]string{"A": "1"},
+			overlay:  nil,
 			overload: false,
-			want:    map[string]string{"A": "1"},
+			want:     map[string]string{"A": "1"},
 		},
 		{
-			name:    "overlay adds new key",
-			env:     map[string]string{"A": "1"},
-			overlay: []string{"B=2"},
+			name:     "overlay adds new key",
+			env:      map[string]string{"A": "1"},
+			overlay:  []string{"B=2"},
 			overload: false,
-			want:    map[string]string{"A": "1", "B": "2"},
+			want:     map[string]string{"A": "1", "B": "2"},
 		},
 		{
-			name:    "overlay without overload does not override",
-			env:     map[string]string{"A": "1"},
-			overlay: []string{"A=2"},
+			name:     "overlay without overload does not override",
+			env:      map[string]string{"A": "1"},
+			overlay:  []string{"A=2"},
 			overload: false,
-			want:    map[string]string{"A": "1"},
+			want:     map[string]string{"A": "1"},
 		},
 		{
-			name:    "overlay with overload overrides",
-			env:     map[string]string{"A": "1"},
-			overlay: []string{"A=2"},
+			name:     "overlay with overload overrides",
+			env:      map[string]string{"A": "1"},
+			overlay:  []string{"A=2"},
 			overload: true,
-			want:    map[string]string{"A": "2"},
+			want:     map[string]string{"A": "2"},
 		},
 		{
-			name:    "invalid overlay returns error",
-			env:     map[string]string{},
-			overlay: []string{"NO_EQUALS"},
+			name:     "invalid overlay returns error",
+			env:      map[string]string{},
+			overlay:  []string{"NO_EQUALS"},
 			overload: false,
-			wantErr: true,
+			wantErr:  true,
 		},
 		{
-			name:    "empty key in overlay returns error",
-			env:     map[string]string{},
-			overlay: []string{"=value"},
+			name:     "empty key in overlay returns error",
+			env:      map[string]string{},
+			overlay:  []string{"=value"},
 			overload: false,
-			wantErr: true,
+			wantErr:  true,
 		},
 	}
 	for _, tt := range tests {
@@ -912,9 +912,15 @@ func TestKillProcessTree(t *testing.T) {
 	defer func() { killFunc = oldKill }()
 
 	t.Run("sends SIGTERM to group and children", func(t *testing.T) {
-		var killed []struct{ pid int; sig syscall.Signal }
+		var killed []struct {
+			pid int
+			sig syscall.Signal
+		}
 		killFunc = func(pid int, sig syscall.Signal) error {
-			killed = append(killed, struct{ pid int; sig syscall.Signal }{pid, sig})
+			killed = append(killed, struct {
+				pid int
+				sig syscall.Signal
+			}{pid, sig})
 			return nil
 		}
 		execPgrepOld := execPgrep
