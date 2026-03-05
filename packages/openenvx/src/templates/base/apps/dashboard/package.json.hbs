@@ -1,0 +1,31 @@
+{
+  "name": "@{{projectName}}/dashboard",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack --port 3001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "@{{projectName}}/ui": "workspace:*",
+    "@{{projectName}}/db": "workspace:*",
+    "@{{projectName}}/auth": "workspace:*",
+    "better-auth": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
+    "typescript": "catalog:",
+    "tailwindcss": "catalog:",
+    "tailwindcss-animate": "catalog:",
+    "postcss": "catalog:",
+    "autoprefixer": "catalog:"
+  }
+}

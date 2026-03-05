@@ -186,16 +186,16 @@ func runWithWatch(merged map[string]string, files []string, command string, args
 
 			newMerged, err := runenv.LoadDecryptedEnvFromFiles(files, runOverload, runStrict)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error reloading .env: %v — keeping previous environment, process not restarted.\n", err)
+				fmt.Fprintf(os.Stderr, "Error reloading .env: %v - keeping previous environment, process not restarted.\n", err)
 				continue
 			}
 			if err := runenv.MergeOverlayEnv(newMerged, runEnv, runOverload); err != nil {
-				fmt.Fprintf(os.Stderr, "Error merging overlay: %v — keeping previous environment, process not restarted.\n", err)
+				fmt.Fprintf(os.Stderr, "Error merging overlay: %v - keeping previous environment, process not restarted.\n", err)
 				continue
 			}
 			newEnv, err := runenv.ExpandMap(newMerged)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error expanding variables: %v — keeping previous environment, process not restarted.\n", err)
+				fmt.Fprintf(os.Stderr, "Error expanding variables: %v - keeping previous environment, process not restarted.\n", err)
 				continue
 			}
 

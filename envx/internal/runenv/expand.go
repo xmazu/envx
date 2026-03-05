@@ -30,8 +30,8 @@ func minimalShellEnv() []string {
 }
 
 // runShellCommand runs command via sh -c and returns trimmed stdout.
-// Uses a minimal environment (PATH, HOME, USER, LANG) only—not the full
-// process environment—so that command substitution cannot access parent secrets.
+// Uses a minimal environment (PATH, HOME, USER, LANG) only-not the full
+// process environment-so that command substitution cannot access parent secrets.
 func runShellCommand(command string) (string, error) {
 	cmd := exec.Command("sh", "-c", command)
 	cmd.Env = minimalShellEnv()

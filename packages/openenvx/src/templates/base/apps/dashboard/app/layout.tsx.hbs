@@ -1,0 +1,20 @@
+import { AuthProvider } from '@{{projectName}}/auth';
+import '@{{projectName}}/ui/globals.css';
+
+export const metadata = {
+  title: 'Dashboard | {{projectName}}',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
+    </html>
+  );
+}

@@ -1,5 +1,4 @@
 # Binaries
-envx
 *.exe
 dist/
 
@@ -30,3 +29,8 @@ Thumbs.db
 # Temporary
 *.tmp
 *.temp
+
+
+node_modules/
+dist/
+.turbo

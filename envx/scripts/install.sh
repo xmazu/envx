@@ -1,6 +1,6 @@
 #!/bin/bash
 # EnvX Installer
-# Installation: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/xmazu/envx/main/scripts/install.sh)"
+# Installation: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/xmazu/envx/main/envx/scripts/install.sh)"
 
 set -e
 

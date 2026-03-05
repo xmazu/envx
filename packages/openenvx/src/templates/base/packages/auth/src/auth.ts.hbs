@@ -1,0 +1,15 @@
+import { betterAuth } from 'better-auth';
+import { db } from '@{{projectName}}/db';
+
+export const auth = betterAuth({
+  database: {
+    provider: 'pg',
+    connectionString: process.env.DATABASE_URL!,
+  },
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    },
+  },
+});
