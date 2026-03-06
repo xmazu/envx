@@ -29,10 +29,10 @@
     "access": "public"
   },
   "dependencies": {
-    "zod": "^4.0.0"
+    "zod": "^4.3.0"
   },
   "peerDependencies": {
-    "zod": "^4.0.0"
+    "zod": "^4.3.0"
   },
   "devDependencies": {
     "@types/node": "^25.3.5",

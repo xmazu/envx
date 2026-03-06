@@ -46,7 +46,7 @@ const schema = {
 {{/if}}
 };
 
-export const env = createEnv(schema);
+export const env = createEnv(schema, process.env);
 
 export const isDevelopment = () => env.NODE_ENV === 'development';
 export const isProduction = () => env.NODE_ENV === 'production';
