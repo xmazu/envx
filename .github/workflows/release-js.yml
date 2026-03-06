@@ -8,8 +8,38 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
+  check-changesets:
+    name: Check for Changesets
+    runs-on: ubuntu-latest
+    outputs:
+      has-changesets: ${{ steps.check.outputs.has-changesets }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Check for changeset files
+        id: check
+        run: |
+          if ls .changeset/*.md 1> /dev/null 2>&1; then
+            # Check if there are any changeset files other than README.md
+            changesets=$(ls .changeset/*.md | grep -v "README.md" || true)
+            if [ -n "$changesets" ]; then
+              echo "has-changesets=true" >> "$GITHUB_OUTPUT"
+              echo "Found changeset files:"
+              echo "$changesets"
+            else
+              echo "has-changesets=false" >> "$GITHUB_OUTPUT"
+              echo "No changeset files found (only README.md)"
+            fi
+          else
+            echo "has-changesets=false" >> "$GITHUB_OUTPUT"
+            echo "No changeset files found"
+          fi
+
   release:
     name: Release to NPM
+    needs: check-changesets
+    if: needs.check-changesets.outputs.has-changesets == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
