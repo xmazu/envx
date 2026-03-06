@@ -48,4 +48,7 @@ jobs:
         run: bun run build
 
       - name: Type Check
-        run: bun run lint
+        run: bunx tsc --noEmit
+
+      - name: Lint
+        run: bunx biome check .
