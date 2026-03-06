@@ -28,6 +28,7 @@ const dependencyCatalog = {
   'tailwind-merge': '^3.5.0',
   'tw-animate-css': '1.3.6',
   '@tailwindcss/postcss': '^4',
+  zod: '^4.3.0',
 } as const;
 
 function getTemplatesDir(subPath: string): string {
@@ -216,9 +217,7 @@ export async function appendEnvVariables(
   targetDir: string,
   config: ProjectConfig
 ): Promise<void> {
-  const envTemplatePath = getTemplatesDir(
-    path.join('features', 'env.example.hbs')
-  );
+  const envTemplatePath = getTemplatesDir(path.join('features', 'env.hbs'));
 
   if (!(await fs.pathExists(envTemplatePath))) {
     return;
@@ -228,13 +227,19 @@ export async function appendEnvVariables(
   const template = Handlebars.compile(templateContent);
   const rendered = template(config);
 
-  const envPath = path.join(targetDir, '.env.example');
-  let existingContent = '';
-  if (await fs.pathExists(envPath)) {
-    existingContent = await fs.readFile(envPath, 'utf-8');
+  // Append to both apps' .env files (create if missing, e.g. when base template
+  // doesn't include .env or structure changes)
+  const apps = ['web', 'dashboard'];
+  for (const app of apps) {
+    const envPath = path.join(targetDir, 'apps', app, '.env');
+    await fs.ensureDir(path.dirname(envPath));
+    if (await fs.pathExists(envPath)) {
+      const existingContent = await fs.readFile(envPath, 'utf-8');
+      await fs.writeFile(envPath, `${existingContent}\n${rendered}`);
+    } else {
+      await fs.writeFile(envPath, rendered);
+    }
   }
-
-  await fs.writeFile(envPath, `${existingContent}\n${rendered}`);
 }
 
 export async function addPackageDependency(

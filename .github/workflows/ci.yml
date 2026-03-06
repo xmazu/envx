@@ -49,7 +49,7 @@ jobs:
         run: bun run test
 
       - name: Type Check
-        run: bunx tsc --noEmit
+        run: bun run typecheck
 
       - name: Lint
         run: bunx biome check .
