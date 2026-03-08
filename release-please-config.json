@@ -21,6 +21,7 @@
   },
   "separate-pull-requests": false,
   "group-pull-request-title-pattern": "chore: release ${component}",
+  "bump-minor-pre-major": true,
   "plugins": [
     {
       "type": "linked-versions",
