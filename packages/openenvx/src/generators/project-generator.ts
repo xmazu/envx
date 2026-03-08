@@ -229,28 +229,43 @@ async function* initGit(ctx: GenerateContext): AsyncGenerator<LogEntry> {
   yield { message: 'Git repository initialized', level: 'success' };
 }
 
+const SHADCN_COMPONENTS = [
+  'alert',
+  'avatar',
+  'badge',
+  'button',
+  'card',
+  'dropdown-menu',
+  'form',
+  'input',
+  'label',
+  'separator',
+  'sheet',
+  'sidebar',
+  'skeleton',
+  'tooltip',
+] as const;
+
 async function* initShadcn(ctx: GenerateContext): AsyncGenerator<LogEntry> {
   yield { message: 'Adding shadcn/ui components...', level: 'spinner' };
 
-  const webAppDir = path.join(ctx.targetDir, 'apps', 'web');
+  const uiPackageDir = path.join(ctx.targetDir, 'packages', 'ui');
 
   const runCmd = ctx.packageManager === 'bun' ? 'bunx' : 'pnpm';
   const runArgs =
     ctx.packageManager === 'bun'
-      ? ['shadcn@latest', 'add', '-y', 'button', 'card', 'input', 'label']
+      ? ['shadcn@latest', 'add', '-y', '--overwrite', ...SHADCN_COMPONENTS]
       : [
           'exec',
           'shadcn@latest',
           'add',
           '-y',
-          'button',
-          'card',
-          'input',
-          'label',
+          '--overwrite',
+          ...SHADCN_COMPONENTS,
         ];
 
   await execa(runCmd, runArgs, {
-    cwd: webAppDir,
+    cwd: uiPackageDir,
     stdout: 'inherit',
     stderr: 'inherit',
   });
@@ -290,5 +305,6 @@ export async function* generateProject(
   yield* addWorkspaceDependencies(ctx);
   yield* installDependencies(ctx);
   yield* initShadcn(ctx);
+  // yield* installDependencies(ctx);
   yield* initGit(ctx);
 }

@@ -16,7 +16,6 @@ const dependencyCatalog = {
   '@types/react-dom': '^19.2.3',
   '@types/node': '^25.3.3',
   tailwindcss: '^4.2.1',
-  'tailwindcss-animate': '^1.0.7',
   postcss: '^8.5.8',
   autoprefixer: '^10.4.27',
   'drizzle-orm': '^0.45.1',
@@ -100,8 +99,7 @@ ${Object.entries(dependencyCatalog)
 export async function generateBaseTemplate(
   targetDir: string,
   config: ProjectConfig,
-  packageManager: PackageManager,
-  hasOexctl: boolean
+  packageManager: PackageManager
 ): Promise<void> {
   const templatesDir = getTemplatesDir('base');
 

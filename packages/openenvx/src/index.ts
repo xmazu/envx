@@ -103,6 +103,7 @@ bun dev`;
     }
   });
 
+// biome-ignore lint/suspicious/useAwait: we don't want to await this
 async function installOexctl(): Promise<void> {
   const installScriptUrl =
     'https://raw.githubusercontent.com/xmazu/openenvx/main/runtime/scripts/install.sh';
