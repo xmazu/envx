@@ -1,6 +1,9 @@
 name: Release Please - Create PR
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
