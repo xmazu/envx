@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Release openenvx
+        run: |
+          VERSION=$(jq -r '.version' packages/openenvx/package.json)
+          TAG="openenvx-v$VERSION"
+          if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+            bun install && bun run build
+            echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+            cd packages/openenvx && npm publish --access public
+            cd ../..
+            gh release create "$TAG" --title "openenvx v$VERSION" --generate-notes
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Release envtyped
+        run: |
+          VERSION=$(jq -r '.version' packages/envtyped/package.json)
+          TAG="envtyped-v$VERSION"
+          if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+            cd packages/envtyped && npm publish --access public
+            cd ../..
+            gh release create "$TAG" --title "envtyped v$VERSION" --generate-notes
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Release Go binaries
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+      - run: |
+          for pkg in runtime envx; do
+            BIN=$([ "$pkg" = "runtime" ] && echo "oexctl" || echo "envx")
+            TAG="${pkg}-v0.3.0"
+            if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+              mkdir -p dist
+              for os in darwin linux; do
+                for arch in amd64 arm64; do
+                  GOOS=$os GOARCH=$arch go build -C $pkg -o ../dist/${BIN}-${os}-${arch} .
+                done
+              done
+              gh release create "$TAG" --title "$pkg v0.3.0" --generate-notes dist/*
+              rm -rf dist
+            fi
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
