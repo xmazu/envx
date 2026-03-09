@@ -31,11 +31,11 @@ const dependencyCatalog = {
 } as const;
 
 function getTemplatesDir(subPath: string): string {
-  const builtPath = path.join(__dirname, 'templates', subPath);
+  const builtPath = path.join(__dirname, 'template', subPath);
   if (fs.existsSync(builtPath)) {
     return builtPath;
   }
-  const devPath = path.join(__dirname, '..', 'templates', subPath);
+  const devPath = path.join(__dirname, '../..', 'template', subPath);
   if (fs.existsSync(devPath)) {
     return devPath;
   }

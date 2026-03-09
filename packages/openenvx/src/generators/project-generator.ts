@@ -97,12 +97,7 @@ async function* createProjectDirectory(
 
 async function* generateBase(ctx: GenerateContext): AsyncGenerator<LogEntry> {
   yield { message: 'Generating base template...', level: 'spinner' };
-  await generateBaseTemplate(
-    ctx.targetDir,
-    ctx.config,
-    ctx.packageManager,
-    ctx.hasOexctl
-  );
+  await generateBaseTemplate(ctx.targetDir, ctx.config, ctx.packageManager);
   ctx.state.generated.push('base');
   yield { message: 'Base template generated', level: 'success' };
 }
@@ -246,6 +241,48 @@ const SHADCN_COMPONENTS = [
   'tooltip',
 ] as const;
 
+function filterShadcnTooltipMessage(output: string): string {
+  const lines = output.split('\n');
+  const result: string[] = [];
+
+  let skipping = false;
+  let inFenceBlock = false;
+
+  for (const line of lines) {
+    if (
+      !skipping &&
+      line.includes(
+        'The `tooltip` component has been added. Remember to wrap your app with the `TooltipProvider` component.'
+      )
+    ) {
+      skipping = true;
+      inFenceBlock = false;
+      continue;
+    }
+
+    if (skipping) {
+      const trimmed = line.trimStart();
+
+      if (trimmed.startsWith('```')) {
+        if (!inFenceBlock) {
+          inFenceBlock = true;
+          continue;
+        }
+
+        skipping = false;
+        inFenceBlock = false;
+        continue;
+      }
+
+      continue;
+    }
+
+    result.push(line);
+  }
+
+  return result.join('\n').trimEnd();
+}
+
 async function* initShadcn(ctx: GenerateContext): AsyncGenerator<LogEntry> {
   yield { message: 'Adding shadcn/ui components...', level: 'spinner' };
 
@@ -264,11 +301,18 @@ async function* initShadcn(ctx: GenerateContext): AsyncGenerator<LogEntry> {
           ...SHADCN_COMPONENTS,
         ];
 
-  await execa(runCmd, runArgs, {
+  const { stdout, stderr } = await execa(runCmd, runArgs, {
     cwd: uiPackageDir,
-    stdout: 'inherit',
-    stderr: 'inherit',
   });
+
+  const filteredStdout = filterShadcnTooltipMessage(stdout ?? '');
+  if (filteredStdout.length > 0) {
+    process.stdout.write(`${filteredStdout}\n`);
+  }
+
+  if (stderr && stderr.length > 0) {
+    process.stderr.write(`${stderr}\n`);
+  }
 
   yield { message: 'shadcn/ui components added', level: 'success' };
 }

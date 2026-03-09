@@ -12,8 +12,8 @@ export default defineConfig({
     copy({
       resolveFrom: 'cwd',
       assets: {
-        from: ['./src/templates/**/*'],
-        to: ['./dist/templates'],
+        from: ['./template/**/*'],
+        to: ['./dist/template'],
       },
       globbyOptions: {
         dot: true,
