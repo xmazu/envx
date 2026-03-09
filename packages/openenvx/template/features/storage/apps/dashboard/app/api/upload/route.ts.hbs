@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getUploadUrl } from '@{{projectName}}/storage';
+import { storage } from '@/lib/storage';
 
 export async function POST(req: NextRequest) {
   const { key, contentType } = await req.json();
@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const url = await getUploadUrl(key, contentType);
+    const url = await storage.getUploadUrl(key, contentType);
     return Response.json({ url, key });
   } catch (error) {
     return Response.json({ error: 'Failed to generate upload URL' }, { status: 500 });

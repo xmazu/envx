@@ -1,4 +1,4 @@
-import { execSync } from 'node:child_process';
+import { execSync, spawn } from 'node:child_process';
 import path from 'node:path';
 import { execa } from 'execa';
 import fs from 'fs-extra';
@@ -64,6 +64,37 @@ function checkOexctlInstalled(): boolean {
   } catch {
     return false;
   }
+}
+
+function installOexctl(): Promise<boolean> {
+  const installScriptUrl =
+    'https://raw.githubusercontent.com/xmazu/openenvx/main/runtime/scripts/install.sh';
+
+  return new Promise((resolve) => {
+    const child = spawn(
+      'bash',
+      ['-c', `curl -fsSL "${installScriptUrl}" | bash`],
+      {
+        stdio: ['inherit', 'pipe', 'pipe'],
+      }
+    );
+
+    child.stdout?.on('data', (data: Buffer) => {
+      process.stdout.write(data);
+    });
+
+    child.stderr?.on('data', (data: Buffer) => {
+      process.stderr.write(data);
+    });
+
+    child.on('close', (code: number | null) => {
+      resolve(code === 0);
+    });
+
+    child.on('error', () => {
+      resolve(false);
+    });
+  });
 }
 
 function createContext(
@@ -323,7 +354,7 @@ export async function* generateProject(
   const packageManager = await detectPackageManager();
   yield { message: `Using package manager: ${packageManager}`, level: 'info' };
 
-  const hasOexctl = checkOexctlInstalled();
+  let hasOexctl = checkOexctlInstalled();
   if (hasOexctl) {
     yield {
       message: 'oexctl detected - configuring proxy URLs',
@@ -331,13 +362,27 @@ export async function* generateProject(
     };
   } else {
     yield {
-      message: 'oexctl not detected - using fallback ports',
-      level: 'info',
+      message: 'oexctl not detected - attempting automatic installation...',
+      level: 'spinner',
     };
-    yield {
-      message: 'Install oexctl for better URLs: openenvx install',
-      level: 'info',
-    };
+
+    const installed = await installOexctl();
+    if (installed) {
+      hasOexctl = true;
+      yield {
+        message: 'oexctl installed successfully - configuring proxy URLs',
+        level: 'success',
+      };
+    } else {
+      yield {
+        message: 'oexctl installation failed - using fallback ports',
+        level: 'warning',
+      };
+      yield {
+        message: 'Install manually: openenvx install',
+        level: 'info',
+      };
+    }
   }
 
   const ctx = createContext(config, packageManager, hasOexctl);
@@ -349,6 +394,5 @@ export async function* generateProject(
   yield* addWorkspaceDependencies(ctx);
   yield* installDependencies(ctx);
   yield* initShadcn(ctx);
-  // yield* installDependencies(ctx);
   yield* initGit(ctx);
 }

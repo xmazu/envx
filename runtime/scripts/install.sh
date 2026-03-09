@@ -51,16 +51,18 @@ detect_arch() {
     esac
 }
 
-# Get the latest release version
+# Get the latest oexctl release version
 get_latest_version() {
-    version=$(curl -s "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name"' | head -1 | cut -d'"' -f4 2>/dev/null)
+    # Get all releases and filter for oexctl tags, then get the latest one
+    version=$(curl -s "https://api.github.com/repos/${REPO}/releases" | grep '"tag_name"' | grep 'oexctl-' | head -1 | cut -d'"' -f4 2>/dev/null)
 
     if [ -z "$version" ]; then
         echo ""
         return 1
     fi
 
-    version="${version#v}"
+    # Extract version number from tag (e.g., "oexctl-v0.4.3" -> "0.4.3")
+    version="${version#oexctl-v}"
     echo "$version"
 }
 
@@ -88,7 +90,7 @@ main() {
     print_success "Latest version: v${VERSION}"
 
     BINARY_FILE="${BINARY_NAME}-${OS}-${ARCH}"
-    DOWNLOAD_URL="https://github.com/${REPO}/releases/download/v${VERSION}/${BINARY_FILE}"
+    DOWNLOAD_URL="https://github.com/${REPO}/releases/download/oexctl-v${VERSION}/${BINARY_FILE}"
 
     if [ -x "${INSTALL_DIR}/${BINARY_NAME}" ]; then
         INSTALLED_VERSION=$("${INSTALL_DIR}/${BINARY_NAME}" --version 2>/dev/null | sed -nE 's/.*v([0-9.]+).*/\1/p' || echo "unknown")

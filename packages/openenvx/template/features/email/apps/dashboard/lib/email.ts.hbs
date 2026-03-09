@@ -1,0 +1,4 @@
+import { createEmailClient } from '@{{projectName}}/email';
+import { env } from './env';
+
+export const email = createEmailClient(env.RESEND_API_KEY);
