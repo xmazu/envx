@@ -20,14 +20,56 @@ func FindFreePort() (int, error) {
 	return port, nil
 }
 
+func isNextJSCommand(command []string) bool {
+	// Look for "next" anywhere in the command (handles direct, npx, bun, pnpm)
+	for _, arg := range command {
+		if arg == "next" || strings.HasSuffix(arg, "/next") {
+			return true
+		}
+	}
+	return false
+}
+
+func injectPortForNextJS(command []string, port int) []string {
+	// Check if --port already exists
+	for i, arg := range command {
+		if arg == "--port" && i+1 < len(command) {
+			return command // Port already specified
+		}
+	}
+
+	// Find "next" position and insert --port right after it
+	for i, arg := range command {
+		if arg == "next" || strings.HasSuffix(arg, "/next") {
+			result := make([]string, 0, len(command)+2)
+			result = append(result, command[:i+1]...)
+			result = append(result, "--port", strconv.Itoa(port))
+			result = append(result, command[i+1:]...)
+			return result
+		}
+	}
+
+	return command
+}
+
 func Run(name string, command []string, workdir string, force bool) (port int, cmd *exec.Cmd, err error) {
 	port, err = FindFreePort()
 	if err != nil {
 		return 0, nil, err
 	}
 
+	env := os.Environ()
+
+	// For Next.js, inject --port into the command instead of using env.PORT
+	if isNextJSCommand(command) {
+		command = injectPortForNextJS(command, port)
+		env = append(env, "HOST=0.0.0.0")
+	} else {
+		env = append(env, "PORT="+strconv.Itoa(port), "HOST=0.0.0.0")
+	}
+
 	cmd = exec.Command(command[0], command[1:]...)
-	cmd.Env = append(os.Environ(), "PORT="+strconv.Itoa(port), "HOST=0.0.0.0")
+	cmd.Env = env
 	if workdir != "" {
 		cmd.Dir = workdir
 	}

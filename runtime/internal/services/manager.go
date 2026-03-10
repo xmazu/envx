@@ -10,6 +10,7 @@ import (
 type Manager struct {
 	runtime Runtime
 	root    string
+	apps    *AppRunner
 }
 
 func NewManager(root string) (*Manager, error) {
@@ -17,35 +18,88 @@ func NewManager(root string) (*Manager, error) {
 	if !rt.IsAvailable() {
 		return nil, fmt.Errorf("docker compose not available")
 	}
-	return &Manager{runtime: rt, root: root}, nil
+
+	apps := NewAppRunner()
+	appsFile := filepath.Join(root, ".openenvx", "apps.json")
+	if err := apps.LoadConfig(appsFile); err != nil {
+		return nil, err
+	}
+
+	return &Manager{runtime: rt, root: root, apps: apps}, nil
 }
 
 func (m *Manager) composeFile() string {
 	return filepath.Join(m.root, ".openenvx", "services.yaml")
 }
 
-func (m *Manager) hasConfig() bool {
+func (m *Manager) appsFile() string {
+	return filepath.Join(m.root, ".openenvx", "apps.json")
+}
+
+func (m *Manager) hasComposeConfig() bool {
 	_, err := os.Stat(m.composeFile())
 	return err == nil
 }
 
+func (m *Manager) hasAppsConfig() bool {
+	_, err := os.Stat(m.appsFile())
+	return err == nil
+}
+
 func (m *Manager) Start(ctx context.Context) error {
-	if !m.hasConfig() {
-		return fmt.Errorf("no services.yaml found in .openenvx/")
+	if m.hasComposeConfig() {
+		if err := m.runtime.Start(ctx, m.composeFile()); err != nil {
+			return err
+		}
 	}
-	return m.runtime.Start(ctx, m.composeFile())
+
+	if m.hasAppsConfig() {
+		if err := m.apps.Start(); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (m *Manager) Stop(ctx context.Context) error {
-	if !m.hasConfig() {
-		return nil
+	if m.hasAppsConfig() {
+		if err := m.apps.Stop(); err != nil {
+			return err
+		}
 	}
-	return m.runtime.Stop(ctx, m.composeFile())
+
+	if m.hasComposeConfig() {
+		if err := m.runtime.Stop(ctx, m.composeFile()); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
-func (m *Manager) Status(ctx context.Context) ([]Status, error) {
-	if !m.hasConfig() {
-		return []Status{}, nil
+type CombinedStatus struct {
+	Services []Status
+	Apps     []AppStatus
+}
+
+func (m *Manager) Status(ctx context.Context) (*CombinedStatus, error) {
+	result := &CombinedStatus{
+		Services: []Status{},
+		Apps:     []AppStatus{},
 	}
-	return m.runtime.Status(ctx, m.composeFile())
+
+	if m.hasComposeConfig() {
+		services, err := m.runtime.Status(ctx, m.composeFile())
+		if err != nil {
+			return nil, err
+		}
+		result.Services = services
+	}
+
+	if m.hasAppsConfig() {
+		result.Apps = m.apps.Status()
+	}
+
+	return result, nil
 }

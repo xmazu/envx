@@ -11,10 +11,7 @@ import {
 } from '@clack/prompts';
 import { Command } from 'commander';
 import color from 'picocolors';
-import {
-  generateProject,
-  type ProjectConfig,
-} from './generators/project-generator';
+import { generateProject, type ProjectConfig } from './generators';
 
 const PROJECT_NAME_REGEX = /^[a-z0-9-_]+$/i;
 

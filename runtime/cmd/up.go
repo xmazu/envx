@@ -40,8 +40,18 @@ func runUp(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	for _, s := range status {
-		fmt.Printf("  %s: %s\n", s.Name, s.State)
+	if len(status.Services) > 0 {
+		fmt.Println("Services:")
+		for _, s := range status.Services {
+			fmt.Printf("  %s: %s\n", s.Name, s.State)
+		}
+	}
+
+	if len(status.Apps) > 0 {
+		fmt.Println("Apps:")
+		for _, a := range status.Apps {
+			fmt.Printf("  %s: %s (PID: %d)\n", a.Name, a.Status, a.PID)
+		}
 	}
 
 	return nil
