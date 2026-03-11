@@ -1,0 +1,7 @@
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  transpilePackages: ["@{{projectName}}/ui", "@{{projectName}}/auth", "@{{projectName}}/db"],
+};
+
+export default nextConfig;

@@ -35,7 +35,7 @@ OpenEnvX is a local-first development runtime for micro-SaaS builders focused on
 /apps/
   └── landing/          # Next.js marketing site
 /packages/
-  ├── openenvx/         # Project generator CLI (create-openenvx-app)
+  ├── openenvx/         # Project generator CLI (openenvx)
   └── envtyped/         # Typed env validation library (@openenvx/envtyped)
 /envx/                  # Go CLI for secure env management
 ```
@@ -63,6 +63,7 @@ portless myapp next dev
 ```
 
 Add to package.json scripts:
+
 ```json
 {
   "scripts": {
@@ -72,6 +73,7 @@ Add to package.json scripts:
 ```
 
 ### Features
+
 - Automatic TLS certificate generation (with `--https`)
 - Named .localhost URLs (no more port conflicts)
 - Git worktree support (branch names as subdomains)
@@ -136,3 +138,4 @@ Packages are published to npm under the `@openenvx` scope:
 
 - `@openenvx/envtyped` - Typed environment validation
 - `openenvx` - Project generator CLI
+

@@ -1,26 +1,31 @@
 {
-  "name": "@{{projectName}}/dashboard",
+  "name": "@{{projectName}}/admin",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "portless run next dev --turbopack",
+    "dev": "portless run next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "biome lint .",
+    "generate:resources": "bun run scripts/generate-resources.ts"
   },
   "dependencies": {
-    "@hookform/resolvers": "catalog:",
-    "@{{projectName}}/auth": "workspace:*",
-    "@{{projectName}}/db": "workspace:*",
     "@{{projectName}}/ui": "workspace:*",
-    "@openenvx/envtyped": "^0.4.0",
-    "better-auth": "catalog:",
-    "lucide-react": "catalog:",
+    "@{{projectName}}/auth": "workspace:*",
+    "@{{projectName}}/admin-auth": "workspace:*",
+    "@{{projectName}}/db": "workspace:*",
+    "@refinedev/core": "^5.0.10",
+    "@refinedev/nextjs-router": "^7.0.5",
+    "@refinedev/simple-rest": "^6.0.1 ",
+    "@refinedev/react-hook-form": "^5.0.4",
+    "@refinedev/react-table": "^6.0.1",
+    "@tanstack/react-table": "^8.20.5",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-hook-form": "catalog:",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "lucide-react": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",

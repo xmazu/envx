@@ -13,6 +13,7 @@ export interface ProjectConfig {
     stripe: boolean;
     storage: boolean;
     email: boolean;
+    admin: boolean;
   };
   name: string;
   projectName: string;

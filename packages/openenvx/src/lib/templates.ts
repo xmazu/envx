@@ -131,7 +131,7 @@ export async function generateBaseTemplate(
 
 export async function generateFeature(
   targetDir: string,
-  feature: 'stripe' | 'storage' | 'email',
+  feature: 'admin' | 'stripe' | 'storage' | 'email',
   config: ProjectConfig
 ): Promise<void> {
   const templatesDir = getTemplatesDir(path.join('features', feature));
@@ -200,8 +200,7 @@ export async function appendEnvVariables(
   };
   const rendered = template(templateContext);
 
-  // Append to both apps' .env files (create if missing, e.g. when base template
-  // doesn't include .env or structure changes)
+  // Append to base apps' .env files
   const apps = ['web', 'dashboard'];
   for (const app of apps) {
     const envPath = path.join(targetDir, 'apps', app, '.env');
@@ -211,6 +210,18 @@ export async function appendEnvVariables(
       await fs.writeFile(envPath, `${existingContent}\n${rendered}`);
     } else {
       await fs.writeFile(envPath, rendered);
+    }
+  }
+
+  // Handle admin app separately if feature is enabled
+  if (config.features.admin) {
+    const adminEnvPath = path.join(targetDir, 'apps', 'admin', '.env');
+    await fs.ensureDir(path.dirname(adminEnvPath));
+    if (await fs.pathExists(adminEnvPath)) {
+      const existingContent = await fs.readFile(adminEnvPath, 'utf-8');
+      await fs.writeFile(adminEnvPath, `${existingContent}\n${rendered}`);
+    } else {
+      await fs.writeFile(adminEnvPath, rendered);
     }
   }
 }

@@ -1,0 +1,90 @@
+"use client";
+
+import { useForm } from "@refinedev/react-hook-form";
+import { useShow } from "@refinedev/core";
+import { Button } from "@{{projectName}}/ui/components/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@{{projectName}}/ui/components/card";
+import { Input } from "@{{projectName}}/ui/components/input";
+import { Label } from "@{{projectName}}/ui/components/label";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+
+export default function ResourceEditPage({
+  params,
+}: {
+  params: { resource: string; id: string };
+}) {
+  const { query: showQuery } = useShow({
+    resource: params.resource,
+    id: params.id,
+  });
+
+  const {
+    refineCore: { onFinish, formLoading, queryResult },
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    refineCoreProps: {
+      resource: params.resource,
+      action: "edit",
+      id: params.id,
+    },
+  });
+
+  const isLoading = queryResult?.isLoading || showQuery.isLoading;
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-4">
+        <Link href={`/${params.resource}`}>
+          <Button variant="ghost" size="icon">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+        </Link>
+        <h1 className="text-3xl font-bold capitalize">Edit {params.resource}</h1>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onFinish)} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                {...register("title", { required: "Title is required" })}
+              />
+              {errors.title && (
+                <p className="text-sm text-destructive">{errors.title.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="content">Content</Label>
+              <Input
+                id="content"
+                {...register("content")}
+              />
+            </div>
+
+            <div className="flex gap-4">
+              <Button type="submit" disabled={formLoading}>
+                {formLoading ? "Saving..." : "Save"}
+              </Button>
+              <Link href={`/${params.resource}`}>
+                <Button variant="outline">Cancel</Button>
+              </Link>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
