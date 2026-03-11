@@ -35,21 +35,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Release envtyped
-        run: |
-          VERSION=$(jq -r '.version' packages/envtyped/package.json)
-          TAG="envtyped-v$VERSION"
-          if ! git rev-parse "$TAG" >/dev/null 2>&1; then
-            bun install && bun run build
-            echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-            cd packages/envtyped && npm publish --access public
-            cd ../..
-            gh release create "$TAG" --title "envtyped v$VERSION" --generate-notes
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - uses: actions/setup-go@v5
         with:
           go-version: "1.24"

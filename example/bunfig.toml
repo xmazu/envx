@@ -1,0 +1,5 @@
+[install]
+registry = "https://registry.npmjs.org"
+
+[install.scopes]
+"@openenvx" = { url = "http://localhost:4873" }

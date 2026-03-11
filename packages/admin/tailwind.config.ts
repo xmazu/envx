@@ -1,0 +1,11 @@
+import type { Config } from 'tailwindcss';
+
+export default {
+  prefix: 'oa-',
+  darkMode: ['class'],
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+} satisfies Config;

@@ -1,0 +1,25 @@
+import "@example/ui/globals.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { RefineProvider } from "@openenvx/admin/components";
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Admin Panel",
+  description: "Admin panel powered by OpenEnvX",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <RefineProvider>{children}</RefineProvider>
+      </body>
+    </html>
+  );
+}

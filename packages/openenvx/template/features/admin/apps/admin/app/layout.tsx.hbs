@@ -1,13 +1,13 @@
 import "@{{projectName}}/ui/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { RefineProvider } from "@/components/refine-provider";
+import { RefineProvider } from "@openenvx/admin/components";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Admin Panel",
-  description: "Admin panel powered by Refine",
+  description: "Admin panel powered by OpenEnvX",
 };
 
 export default function RootLayout({

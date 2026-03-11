@@ -1,0 +1,346 @@
+VerdaccioWarning: The configuration property "logs" has been deprecated, please rename to "log" for future compatibility
+ code: "VERWAR002"
+
+      at emit (/Users/mackan/.bun/install/global/node_modules/process-warning/index.js:52:13)
+      at emit (/Users/mackan/.bun/install/global/node_modules/@verdaccio/core/build/warning-utils.js:38:19)
+      at initLogger (/Users/mackan/.bun/install/global/node_modules/verdaccio/build/lib/utils.js:62:24)
+      at startVerdaccio (/Users/mackan/.bun/install/global/node_modules/verdaccio/build/lib/bootstrap.js:35:14)
+      at execute (/Users/mackan/.bun/install/global/node_modules/verdaccio/build/lib/cli/commands/init.js:58:22)
+      at execute (/Users/mackan/.bun/install/global/node_modules/verdaccio/build/lib/cli/commands/init.js:42:19)
+      at validateAndExecute (/Users/mackan/.bun/install/global/node_modules/clipanion/lib/advanced/Command.js:71:37)
+      at validateAndExecute (/Users/mackan/.bun/install/global/node_modules/clipanion/lib/advanced/Command.js:53:32)
+      at <anonymous> (/Users/mackan/.bun/install/global/node_modules/clipanion/lib/advanced/Cli.js:231:53)
+      at run (/Users/mackan/.bun/install/global/node_modules/clipanion/lib/advanced/Cli.js:231:30)
+      at run (/Users/mackan/.bun/install/global/node_modules/clipanion/lib/advanced/Cli.js:187:15)
+      at runExit (/Users/mackan/.bun/install/global/node_modules/clipanion/lib/advanced/Cli.js:240:39)
+      at runExit (/Users/mackan/.bun/install/global/node_modules/clipanion/lib/advanced/Cli.js:239:19)
+      at <anonymous> (/Users/mackan/.bun/install/global/node_modules/verdaccio/build/lib/cli/cli.js:25:5)
+      at <anonymous> (/Users/mackan/.bun/install/global/node_modules/verdaccio/build/lib/cli.js:2:1)
+      at <anonymous> (/Users/mackan/.bun/install/global/node_modules/verdaccio/bin/verdaccio:2:10)
+
+warn --- This is a deprecated method, please use runServer instead
+info --- config file  - /Users/mackan/dev/startups/openenvx/cli/verdaccio.yaml
+info --- plugin @verdaccio/local-storage successfully loaded (storage)
+info --- using htpasswd file: /Users/mackan/dev/startups/openenvx/cli/htpasswd
+info --- plugin verdaccio-htpasswd successfully loaded (authentication)
+info --- plugin @verdaccio/ui-theme successfully loaded (theme)
+warn --- http address - http://0.0.0.0:4873/ - verdaccio/6.3.1
+info <-- 127.0.0.1 requested 'GET /'
+http <-- 200, user: null(127.0.0.1), req: 'GET /', bytes: 0/1222
+http <-- 200, user: null(127.0.0.1), req: 'GET /', bytes: 0/1222
+info <-- 127.0.0.1 requested 'PUT /@openenvx%2fadmin'
+http <-- 200, user: null(127.0.0.1), req: 'PUT /@openenvx%2fadmin', bytes: 764438/0
+http <-- 201, user: null(127.0.0.1), req: 'PUT /@openenvx%2fadmin', bytes: 764438/53
+info <-- 127.0.0.1 requested 'GET /@openenvx/admin'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin', bytes: 0/3394
+info <-- 127.0.0.1 requested 'GET /@openenvx/admin'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin', bytes: 0/3394
+info <-- 127.0.0.1 requested 'GET /'
+http <-- 200, user: null(127.0.0.1), req: 'GET /', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /', bytes: 0/521
+info <-- 127.0.0.1 requested 'GET /-/static/runtime.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/runtime.b352c37f52242992f0af.js', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /-/static/vendors.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/vendors.b352c37f52242992f0af.js', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/runtime.b352c37f52242992f0af.js', bytes: 0/1950
+info <-- 127.0.0.1 requested 'GET /-/static/main.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/main.b352c37f52242992f0af.js', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/main.b352c37f52242992f0af.js', bytes: 0/88596
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/vendors.b352c37f52242992f0af.js', bytes: 0/716378
+info <-- 127.0.0.1 requested 'GET /-/static/Home.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/Home.b352c37f52242992f0af.js', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/Home.b352c37f52242992f0af.js', bytes: 0/887
+info <-- 127.0.0.1 requested 'GET /-/verdaccio/data/packages'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/verdaccio/data/packages', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/verdaccio/data/packages', bytes: 0/1724
+info <-- 127.0.0.1 requested 'GET /-/static/Version.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/Version.b352c37f52242992f0af.js', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /-/verdaccio/data/sidebar/@openenvx/admin'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/verdaccio/data/sidebar/@openenvx/admin', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/Version.b352c37f52242992f0af.js', bytes: 0/611
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/verdaccio/data/sidebar/@openenvx/admin', bytes: 0/2046
+info <-- 127.0.0.1 requested 'GET /-/verdaccio/data/package/readme/@openenvx/admin'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/verdaccio/data/package/readme/@openenvx/admin', bytes: 0/0
+info --- @openenvx/admin: No readme found
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/verdaccio/data/package/readme/@openenvx/admin', bytes: 0/28
+info <-- 127.0.0.1 requested 'GET /-/verdaccio/data/packages'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/verdaccio/data/packages', bytes: 0/0
+http <-- 304, user: null(127.0.0.1), req: 'GET /-/verdaccio/data/packages', bytes: 0/0
+info <-- 127.0.0.1 requested 'PUT /@openenvx%2fadmin'
+http <-- 200, user: null(127.0.0.1), req: 'PUT /@openenvx%2fadmin', bytes: 764442/0
+http <-- 201, user: null(127.0.0.1), req: 'PUT /@openenvx%2fadmin', bytes: 764442/53
+info <-- 127.0.0.1 requested 'GET /tw-animate-css'
+http <-- 200, user: null(127.0.0.1), req: 'GET /tw-animate-css', bytes: 0/0
+info --- making request: 'GET https://registry.npmjs.org/tw-animate-css'
+info <-- 127.0.0.1 requested 'GET /react-hook-form'
+http <-- 200, user: null(127.0.0.1), req: 'GET /react-hook-form', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /radix-ui'
+http <-- 200, user: null(127.0.0.1), req: 'GET /radix-ui', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /clsx'
+http <-- 200, user: null(127.0.0.1), req: 'GET /clsx', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /class-variance-authority'
+http <-- 200, user: null(127.0.0.1), req: 'GET /class-variance-authority', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@radix-ui%2freact-tooltip'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-tooltip', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@radix-ui%2freact-slot'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-slot', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@radix-ui%2freact-separator'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-separator', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@radix-ui%2freact-label'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-label', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@radix-ui%2freact-dropdown-menu'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-dropdown-menu', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@radix-ui%2freact-dialog'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-dialog', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@radix-ui%2freact-avatar'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-avatar', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@hookform%2fresolvers'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@hookform%2fresolvers', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /tailwind-merge'
+http <-- 200, user: null(127.0.0.1), req: 'GET /tailwind-merge', bytes: 0/0
+info --- making request: 'GET https://registry.npmjs.org/react-hook-form'
+info --- making request: 'GET https://registry.npmjs.org/radix-ui'
+info --- making request: 'GET https://registry.npmjs.org/clsx'
+info --- making request: 'GET https://registry.npmjs.org/class-variance-authority'
+info --- making request: 'GET https://registry.npmjs.org/@radix-ui%2Freact-tooltip'
+info --- making request: 'GET https://registry.npmjs.org/@radix-ui%2Freact-slot'
+info --- making request: 'GET https://registry.npmjs.org/@radix-ui%2Freact-separator'
+info --- making request: 'GET https://registry.npmjs.org/@radix-ui%2Freact-label'
+info --- making request: 'GET https://registry.npmjs.org/@radix-ui%2Freact-dropdown-menu'
+info --- making request: 'GET https://registry.npmjs.org/@radix-ui%2Freact-dialog'
+info --- making request: 'GET https://registry.npmjs.org/@radix-ui%2Freact-avatar'
+info --- making request: 'GET https://registry.npmjs.org/@hookform%2Fresolvers'
+info --- making request: 'GET https://registry.npmjs.org/tailwind-merge'
+info <-- 127.0.0.1 requested 'GET /@neondatabase%2fserverless'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@neondatabase%2fserverless', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /drizzle-kit'
+http <-- 200, user: null(127.0.0.1), req: 'GET /drizzle-kit', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /better-auth'
+http <-- 200, user: null(127.0.0.1), req: 'GET /better-auth', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /zod'
+http <-- 200, user: null(127.0.0.1), req: 'GET /zod', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /react-dom'
+http <-- 200, user: null(127.0.0.1), req: 'GET /react-dom', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /react'
+http <-- 200, user: null(127.0.0.1), req: 'GET /react', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /next'
+http <-- 200, user: null(127.0.0.1), req: 'GET /next', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /lucide-react'
+http <-- 200, user: null(127.0.0.1), req: 'GET /lucide-react', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /drizzle-orm'
+http <-- 200, user: null(127.0.0.1), req: 'GET /drizzle-orm', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@types%2freact-dom'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@types%2freact-dom', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@tanstack%2freact-table'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@tanstack%2freact-table', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@types%2freact'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@types%2freact', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@refinedev%2freact-table'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@refinedev%2freact-table', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@refinedev%2freact-hook-form'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@refinedev%2freact-hook-form', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@types%2fnode'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@types%2fnode', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@refinedev%2fnextjs-router'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@refinedev%2fnextjs-router', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@refinedev%2fcore'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@refinedev%2fcore', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@tailwindcss%2fpostcss'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@tailwindcss%2fpostcss', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /@openenvx%2fadmin'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx%2fadmin', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /typescript'
+http <-- 200, user: null(127.0.0.1), req: 'GET /typescript', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /tailwindcss'
+http <-- 200, user: null(127.0.0.1), req: 'GET /tailwindcss', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /postcss'
+http <-- 200, user: null(127.0.0.1), req: 'GET /postcss', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /autoprefixer'
+http <-- 200, user: null(127.0.0.1), req: 'GET /autoprefixer', bytes: 0/0
+info --- making request: 'GET https://registry.npmjs.org/@neondatabase%2Fserverless'
+info --- making request: 'GET https://registry.npmjs.org/drizzle-kit'
+info --- making request: 'GET https://registry.npmjs.org/better-auth'
+info --- making request: 'GET https://registry.npmjs.org/zod'
+info --- making request: 'GET https://registry.npmjs.org/react-dom'
+info --- making request: 'GET https://registry.npmjs.org/react'
+info --- making request: 'GET https://registry.npmjs.org/next'
+info --- making request: 'GET https://registry.npmjs.org/lucide-react'
+info --- making request: 'GET https://registry.npmjs.org/drizzle-orm'
+info --- making request: 'GET https://registry.npmjs.org/@types%2Freact-dom'
+info --- making request: 'GET https://registry.npmjs.org/@tanstack%2Freact-table'
+info --- making request: 'GET https://registry.npmjs.org/@types%2Freact'
+info --- making request: 'GET https://registry.npmjs.org/@refinedev%2Freact-table'
+info --- making request: 'GET https://registry.npmjs.org/@refinedev%2Freact-hook-form'
+info --- making request: 'GET https://registry.npmjs.org/@types%2Fnode'
+info --- making request: 'GET https://registry.npmjs.org/@refinedev%2Fnextjs-router'
+info --- making request: 'GET https://registry.npmjs.org/@refinedev%2Fcore'
+info --- making request: 'GET https://registry.npmjs.org/@tailwindcss%2Fpostcss'
+info --- making request: 'GET https://registry.npmjs.org/typescript'
+info --- making request: 'GET https://registry.npmjs.org/tailwindcss'
+info --- making request: 'GET https://registry.npmjs.org/postcss'
+info --- making request: 'GET https://registry.npmjs.org/autoprefixer'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx%2fadmin', bytes: 0/909
+info <-- 127.0.0.1 requested 'GET /cmdk'
+http <-- 200, user: null(127.0.0.1), req: 'GET /cmdk', bytes: 0/0
+info --- making request: 'GET https://registry.npmjs.org/cmdk'
+info <-- 127.0.0.1 requested 'GET /@openenvx/admin/-/admin-0.1.1.tgz'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin/-/admin-0.1.1.tgz', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /react-day-picker'
+http <-- 200, user: null(127.0.0.1), req: 'GET /react-day-picker', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /postgres'
+http <-- 200, user: null(127.0.0.1), req: 'GET /postgres', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /date-fns'
+http <-- 200, user: null(127.0.0.1), req: 'GET /date-fns', bytes: 0/0
+info --- making request: 'GET https://registry.npmjs.org/react-day-picker'
+info --- making request: 'GET https://registry.npmjs.org/postgres'
+info --- making request: 'GET https://registry.npmjs.org/date-fns'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin/-/admin-0.1.1.tgz', bytes: 0/571505
+http --- ERR, req: 'GET https://registry.npmjs.org/react-hook-form', error: SSL Error: https://registry.npmjs.org/react-hook-form does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /react-hook-form', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/tailwind-merge', error: SSL Error: https://registry.npmjs.org/tailwind-merge does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /tailwind-merge', error: no such package available
+warn --- host registry.npmjs.org is now offline
+http --- ERR, req: 'GET https://registry.npmjs.org/@radix-ui%2Freact-avatar', error: SSL Error: https://registry.npmjs.org/@radix-ui%2Freact-avatar does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-avatar', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@types%2Freact', error: SSL Error: https://registry.npmjs.org/@types%2Freact does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@types%2freact', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@radix-ui%2Freact-dialog', error: SSL Error: https://registry.npmjs.org/@radix-ui%2Freact-dialog does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-dialog', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@hookform%2Fresolvers', error: SSL Error: https://registry.npmjs.org/@hookform%2Fresolvers does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@hookform%2fresolvers', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/drizzle-orm', error: SSL Error: https://registry.npmjs.org/drizzle-orm does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /drizzle-orm', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@types%2Freact-dom', error: SSL Error: https://registry.npmjs.org/@types%2Freact-dom does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@types%2freact-dom', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@tanstack%2Freact-table', error: SSL Error: https://registry.npmjs.org/@tanstack%2Freact-table does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@tanstack%2freact-table', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/next', error: SSL Error: https://registry.npmjs.org/next does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /next', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/lucide-react', error: SSL Error: https://registry.npmjs.org/lucide-react does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /lucide-react', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/react', error: SSL Error: https://registry.npmjs.org/react does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /react', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/react-dom', error: SSL Error: https://registry.npmjs.org/react-dom does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /react-dom', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/tw-animate-css', error: SSL Error: https://registry.npmjs.org/tw-animate-css does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /tw-animate-css', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/zod', error: SSL Error: https://registry.npmjs.org/zod does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /zod', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/autoprefixer', error: SSL Error: https://registry.npmjs.org/autoprefixer does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /autoprefixer', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@neondatabase%2Fserverless', error: SSL Error: https://registry.npmjs.org/@neondatabase%2Fserverless does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@neondatabase%2fserverless', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/typescript', error: SSL Error: https://registry.npmjs.org/typescript does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /typescript', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/postcss', error: SSL Error: https://registry.npmjs.org/postcss does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /postcss', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@tailwindcss%2Fpostcss', error: SSL Error: https://registry.npmjs.org/@tailwindcss%2Fpostcss does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@tailwindcss%2fpostcss', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/tailwindcss', error: SSL Error: https://registry.npmjs.org/tailwindcss does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /tailwindcss', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/clsx', error: SSL Error: https://registry.npmjs.org/clsx does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /clsx', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@radix-ui%2Freact-separator', error: SSL Error: https://registry.npmjs.org/@radix-ui%2Freact-separator does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-separator', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/class-variance-authority', error: SSL Error: https://registry.npmjs.org/class-variance-authority does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /class-variance-authority', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@radix-ui%2Freact-label', error: SSL Error: https://registry.npmjs.org/@radix-ui%2Freact-label does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-label', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/radix-ui', error: SSL Error: https://registry.npmjs.org/radix-ui does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /radix-ui', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@radix-ui%2Freact-tooltip', error: SSL Error: https://registry.npmjs.org/@radix-ui%2Freact-tooltip does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-tooltip', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@types%2Fnode', error: SSL Error: https://registry.npmjs.org/@types%2Fnode does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@types%2fnode', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@radix-ui%2Freact-dropdown-menu', error: SSL Error: https://registry.npmjs.org/@radix-ui%2Freact-dropdown-menu does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-dropdown-menu', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/cmdk', error: SSL Error: https://registry.npmjs.org/cmdk does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /cmdk', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@radix-ui%2Freact-slot', error: SSL Error: https://registry.npmjs.org/@radix-ui%2Freact-slot does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@radix-ui%2freact-slot', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/better-auth', error: SSL Error: https://registry.npmjs.org/better-auth does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /better-auth', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/drizzle-kit', error: SSL Error: https://registry.npmjs.org/drizzle-kit does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /drizzle-kit', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/react-day-picker', error: SSL Error: https://registry.npmjs.org/react-day-picker does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /react-day-picker', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/postgres', error: SSL Error: https://registry.npmjs.org/postgres does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /postgres', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/date-fns', error: SSL Error: https://registry.npmjs.org/date-fns does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /date-fns', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@refinedev%2Fcore', error: SSL Error: https://registry.npmjs.org/@refinedev%2Fcore does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@refinedev%2fcore', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@refinedev%2Freact-table', error: SSL Error: https://registry.npmjs.org/@refinedev%2Freact-table does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@refinedev%2freact-table', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@refinedev%2Fnextjs-router', error: SSL Error: https://registry.npmjs.org/@refinedev%2Fnextjs-router does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@refinedev%2fnextjs-router', error: no such package available
+http --- ERR, req: 'GET https://registry.npmjs.org/@refinedev%2Freact-hook-form', error: SSL Error: https://registry.npmjs.org/@refinedev%2Freact-hook-form does not support SSL
+http <-- 404, user: null(127.0.0.1), req: 'GET /@refinedev%2freact-hook-form', error: no such package available
+info <-- 127.0.0.1 requested 'GET /@refinedev%2fsimple-rest'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@refinedev%2fsimple-rest', bytes: 0/0
+http <-- 404, user: null(127.0.0.1), req: 'GET /@refinedev%2fsimple-rest', error: no such package available
+info <-- 127.0.0.1 requested 'GET /@openenvx%2fadmin'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx%2fadmin', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx%2fadmin', bytes: 0/909
+info <-- 127.0.0.1 requested 'GET /@openenvx/admin/-/admin-0.1.1.tgz'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin/-/admin-0.1.1.tgz', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin/-/admin-0.1.1.tgz', bytes: 0/571505
+info <-- 127.0.0.1 requested 'PUT /@openenvx%2fadmin'
+http <-- 200, user: null(127.0.0.1), req: 'PUT /@openenvx%2fadmin', bytes: 764446/0
+http <-- 201, user: null(127.0.0.1), req: 'PUT /@openenvx%2fadmin', bytes: 764446/53
+info <-- 127.0.0.1 requested 'GET /@openenvx/admin'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin', bytes: 0/9558
+info <-- 127.0.0.1 requested 'GET /@openenvx%2fadmin'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx%2fadmin', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx%2fadmin', bytes: 0/1033
+info <-- 127.0.0.1 requested 'GET /@openenvx/admin/-/admin-0.1.2.tgz'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin/-/admin-0.1.2.tgz', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin/-/admin-0.1.2.tgz', bytes: 0/571507
+info <-- 127.0.0.1 requested 'GET /'
+http <-- 304, user: null(127.0.0.1), req: 'GET /', bytes: 0/0
+http <-- 304, user: null(127.0.0.1), req: 'GET /', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /-/static/vendors.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/vendors.b352c37f52242992f0af.js', bytes: 0/0
+http <-- 304, user: null(127.0.0.1), req: 'GET /-/static/vendors.b352c37f52242992f0af.js', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /-/static/runtime.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/runtime.b352c37f52242992f0af.js', bytes: 0/0
+http <-- 304, user: null(127.0.0.1), req: 'GET /-/static/runtime.b352c37f52242992f0af.js', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /-/static/main.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/main.b352c37f52242992f0af.js', bytes: 0/0
+http <-- 304, user: null(127.0.0.1), req: 'GET /-/static/main.b352c37f52242992f0af.js', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /-/static/Home.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/Home.b352c37f52242992f0af.js', bytes: 0/0
+http <-- 304, user: null(127.0.0.1), req: 'GET /-/static/Home.b352c37f52242992f0af.js', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /-/verdaccio/data/packages'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/verdaccio/data/packages', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/verdaccio/data/packages', bytes: 0/1724
+info <-- 127.0.0.1 requested 'GET /'
+http <-- 304, user: null(127.0.0.1), req: 'GET /', bytes: 0/0
+http <-- 304, user: null(127.0.0.1), req: 'GET /', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /-/static/runtime.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/runtime.b352c37f52242992f0af.js', bytes: 0/0
+http <-- 304, user: null(127.0.0.1), req: 'GET /-/static/runtime.b352c37f52242992f0af.js', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /-/static/vendors.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/vendors.b352c37f52242992f0af.js', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /-/static/main.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/main.b352c37f52242992f0af.js', bytes: 0/0
+http <-- 304, user: null(127.0.0.1), req: 'GET /-/static/vendors.b352c37f52242992f0af.js', bytes: 0/0
+http <-- 304, user: null(127.0.0.1), req: 'GET /-/static/main.b352c37f52242992f0af.js', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /-/static/Home.b352c37f52242992f0af.js'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/static/Home.b352c37f52242992f0af.js', bytes: 0/0
+http <-- 304, user: null(127.0.0.1), req: 'GET /-/static/Home.b352c37f52242992f0af.js', bytes: 0/0
+info <-- 127.0.0.1 requested 'GET /-/verdaccio/data/packages'
+http <-- 200, user: null(127.0.0.1), req: 'GET /-/verdaccio/data/packages', bytes: 0/0
+http <-- 304, user: null(127.0.0.1), req: 'GET /-/verdaccio/data/packages', bytes: 0/0
+info <-- 127.0.0.1 requested 'PUT /@openenvx%2fadmin'
+http <-- 200, user: null(127.0.0.1), req: 'PUT /@openenvx%2fadmin', bytes: 299442/0
+http <-- 201, user: null(127.0.0.1), req: 'PUT /@openenvx%2fadmin', bytes: 299442/53
+info <-- 127.0.0.1 requested 'GET /@openenvx%2fadmin'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx%2fadmin', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx%2fadmin', bytes: 0/1154
+info <-- 127.0.0.1 requested 'GET /@openenvx/admin/-/admin-0.1.3.tgz'
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin/-/admin-0.1.3.tgz', bytes: 0/0
+http <-- 200, user: null(127.0.0.1), req: 'GET /@openenvx/admin/-/admin-0.1.3.tgz', bytes: 0/222755

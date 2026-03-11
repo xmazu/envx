@@ -1,6 +1,6 @@
 import {
   cancel,
-  confirm,
+  confirm as clackConfirm,
   group,
   intro,
   log,
@@ -19,7 +19,7 @@ const program = new Command();
 
 program
   .name('openenvx')
-  .description('OpenEnvx CLI - Create and manage OpenEnvx SaaS apps')
+  .description('OpenEnvx CLI - Create and manage OpenEnvx SaaS appsXD')
   .version('0.0.1');
 
 program
@@ -63,7 +63,7 @@ program
       }
     );
 
-    const adminEnabled = await confirm({
+    const adminEnabled = await clackConfirm({
       message: 'Include Admin Panel? (Refine + shadcn/ui table)',
       initialValue: false,
     });

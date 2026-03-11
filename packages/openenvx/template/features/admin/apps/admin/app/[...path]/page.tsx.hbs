@@ -1,0 +1,12 @@
+import { DynamicAdminPage } from "@openenvx/admin/components";
+
+interface PageProps {
+  params: Promise<{
+    path?: string[];
+  }>;
+}
+
+export default async function AdminPage({ params }: PageProps) {
+  const { path } = await params;
+  return <DynamicAdminPage params={{ path }} />;
+}
