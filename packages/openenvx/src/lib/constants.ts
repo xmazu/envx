@@ -19,6 +19,9 @@ export const dependencyCatalog = {
   'tw-animate-css': '1.3.6',
   '@tailwindcss/postcss': '^4',
   zod: '^4.3.0',
+  'lucide-react': '^0.575.0',
+  '@hookform/resolvers': '^3.10.0',
+  'react-hook-form': '^7.54.0',
 } as const;
 
 export const SHADCN_COMPONENTS = [
@@ -35,5 +38,18 @@ export const SHADCN_COMPONENTS = [
   'sheet',
   'sidebar',
   'skeleton',
+  'table',
   'tooltip',
+] as const;
+
+// Refine.dev shadcn registry components for admin
+export const REFINE_REGISTRY_COMPONENTS = [
+  'https://ui.refine.dev/r/auto-save-indicator.json',
+  'https://ui.refine.dev/r/views.json',
+  'https://ui.refine.dev/r/data-table.json',
+  'https://ui.refine.dev/r/forms.json',
+  'https://ui.refine.dev/r/buttons.json',
+  'https://ui.refine.dev/r/layout.json',
+  'https://ui.refine.dev/r/error.json',
+  'https://ui.refine.dev/r/notification-provider.json',
 ] as const;

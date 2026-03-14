@@ -1,0 +1,23 @@
+{
+  "name": "@example/db",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.44.0",
+    "@neondatabase/serverless": "^1.0.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.0",
+    "typescript": "^5"
+  },
+   "exports": {
+    "./schema": "./src/schema.ts",
+    "./queries": "./src/queries/index.ts",
+    "./client": "./src/client.ts"
+  }
+}

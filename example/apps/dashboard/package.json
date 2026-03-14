@@ -1,0 +1,37 @@
+{
+  "name": "@example/dashboard",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "portless run next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "catalog:",
+    "@example/auth": "workspace:*",
+    "@example/db": "workspace:*",
+    "@example/ui": "workspace:*",
+    "@t3-oss/env-nextjs": "^0.13.10",
+    "better-auth": "catalog:",
+    "lucide-react": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-hook-form": "catalog:",
+    "zod": "catalog:",
+    "@example/stripe": "workspace:*",
+    "@example/storage": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
+    "typescript": "catalog:",
+    "tailwindcss": "catalog:",
+    "postcss": "catalog:",
+    "autoprefixer": "catalog:"
+  }
+}

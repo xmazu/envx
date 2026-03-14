@@ -1,5 +1,6 @@
 import {
   cancel,
+  confirm as clackConfirm,
   group,
   intro,
   log,
@@ -18,7 +19,7 @@ const program = new Command();
 
 program
   .name('openenvx')
-  .description('OpenEnvx CLI - Create and manage OpenEnvx SaaS apps')
+  .description('OpenEnvx CLI - Create and manage OpenEnvx SaaS appsXD')
   .version('0.0.1');
 
 program
@@ -26,7 +27,7 @@ program
   .description('Initialize a new OpenEnvx project')
   .argument('[project-directory]', 'Directory to create the project in')
   .action(async (projectDirectory) => {
-    intro(color.bgCyan(color.black(' create-openenvx-app ')));
+    intro(color.bgCyan(color.black(' openenvx ')));
 
     const groupResult = await group(
       {
@@ -46,7 +47,7 @@ program
           }),
         features: () =>
           multiselect({
-            message: 'Select features to include:',
+            message: 'Select additional features:',
             options: [
               { value: 'stripe', label: 'Stripe Payments' },
               { value: 'storage', label: 'S3 File Storage' },
@@ -62,6 +63,16 @@ program
       }
     );
 
+    const adminEnabled = await clackConfirm({
+      message: 'Include Admin Panel? (Refine + shadcn/ui table)',
+      initialValue: false,
+    });
+
+    if (typeof adminEnabled !== 'boolean') {
+      cancel('Operation cancelled.');
+      process.exit(0);
+    }
+
     const config: ProjectConfig = {
       name: groupResult.name,
       projectName: groupResult.name,
@@ -69,6 +80,7 @@ program
         stripe: groupResult.features.includes('stripe'),
         storage: groupResult.features.includes('storage'),
         email: groupResult.features.includes('email'),
+        admin: adminEnabled,
       },
       database: 'postgresql',
     };

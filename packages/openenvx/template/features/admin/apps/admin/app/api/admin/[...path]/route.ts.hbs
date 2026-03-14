@@ -1,0 +1,13 @@
+import { createPostgRESTProxy } from "@openenvx/admin/server";
+import { type NextRequest } from "next/server";
+
+const proxy = createPostgRESTProxy({
+  postgrestUrl: process.env.POSTGREST_URL || "http://localhost:3001",
+  getToken: (request: NextRequest) => {
+    // Get token from session/cookie if using authentication
+    // For now, return null to use PostgREST anonymous role
+    return null;
+  },
+});
+
+export const { GET, POST, PUT, PATCH, DELETE } = proxy;
