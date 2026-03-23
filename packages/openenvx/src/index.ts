@@ -1,6 +1,6 @@
-import { spawn } from 'node:child_process';
 import {
   cancel,
+  confirm as clackConfirm,
   group,
   intro,
   log,
@@ -11,10 +11,7 @@ import {
 } from '@clack/prompts';
 import { Command } from 'commander';
 import color from 'picocolors';
-import {
-  generateProject,
-  type ProjectConfig,
-} from './generators/project-generator';
+import { generateProject, type ProjectConfig } from './generators';
 
 const PROJECT_NAME_REGEX = /^[a-z0-9-_]+$/i;
 
@@ -22,7 +19,7 @@ const program = new Command();
 
 program
   .name('openenvx')
-  .description('OpenEnvx CLI - Create and manage OpenEnvx SaaS apps')
+  .description('OpenEnvx CLI - Create and manage OpenEnvx SaaS appsXD')
   .version('0.0.1');
 
 program
@@ -30,7 +27,7 @@ program
   .description('Initialize a new OpenEnvx project')
   .argument('[project-directory]', 'Directory to create the project in')
   .action(async (projectDirectory) => {
-    intro(color.bgCyan(color.black(' create-openenvx-app ')));
+    intro(color.bgCyan(color.black(' openenvx ')));
 
     const groupResult = await group(
       {
@@ -50,7 +47,7 @@ program
           }),
         features: () =>
           multiselect({
-            message: 'Select features to include:',
+            message: 'Select additional features:',
             options: [
               { value: 'stripe', label: 'Stripe Payments' },
               { value: 'storage', label: 'S3 File Storage' },
@@ -66,6 +63,16 @@ program
       }
     );
 
+    const adminEnabled = await clackConfirm({
+      message: 'Include Admin Panel? (Refine + shadcn/ui table)',
+      initialValue: false,
+    });
+
+    if (typeof adminEnabled !== 'boolean') {
+      cancel('Operation cancelled.');
+      process.exit(0);
+    }
+
     const config: ProjectConfig = {
       name: groupResult.name,
       projectName: groupResult.name,
@@ -73,6 +80,7 @@ program
         stripe: groupResult.features.includes('stripe'),
         storage: groupResult.features.includes('storage'),
         email: groupResult.features.includes('email'),
+        admin: adminEnabled,
       },
       database: 'postgresql',
     };
@@ -99,61 +107,6 @@ bun dev`;
       outro(color.green('Project created successfully!'));
     } catch (err) {
       log.error(err instanceof Error ? err.message : 'Unknown error occurred');
-      process.exit(1);
-    }
-  });
-
-// biome-ignore lint/suspicious/useAwait: we don't want to await this
-async function installOexctl(): Promise<void> {
-  const cacheBuster = Date.now();
-  const installScriptUrl = `https://raw.githubusercontent.com/xmazu/openenvx/main/runtime/scripts/install.sh?${cacheBuster}`;
-
-  log.step('Installing oexctl...');
-
-  return new Promise((resolve, reject) => {
-    const child = spawn(
-      'bash',
-      ['-c', `curl -fsSL "${installScriptUrl}" | bash`],
-      {
-        stdio: ['inherit', 'pipe', 'pipe'],
-      }
-    );
-
-    child.stdout?.on('data', (data: Buffer) => {
-      process.stdout.write(data);
-    });
-
-    child.stderr?.on('data', (data: Buffer) => {
-      process.stderr.write(data);
-    });
-
-    child.on('close', (code: number | null) => {
-      if (code === 0) {
-        resolve();
-      } else {
-        reject(new Error(`Install script failed with exit code ${code}`));
-      }
-    });
-
-    child.on('error', (err: Error) => {
-      reject(new Error(`Failed to run install script: ${err.message}`));
-    });
-  });
-}
-
-program
-  .command('install')
-  .description('Install oexctl - the OpenEnvX control plane CLI')
-  .action(async () => {
-    intro(color.bgCyan(color.black(' install oexctl ')));
-
-    try {
-      await installOexctl();
-      log.success('oexctl installed successfully!');
-      log.message('You can now use: oexctl proxy run myapp -- npm run dev');
-      outro(color.green('Installation complete!'));
-    } catch (err) {
-      log.error(err instanceof Error ? err.message : 'Installation failed');
       process.exit(1);
     }
   });

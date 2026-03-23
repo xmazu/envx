@@ -35,31 +35,48 @@ OpenEnvX is a local-first development runtime for micro-SaaS builders focused on
 /apps/
   └── landing/          # Next.js marketing site
 /packages/
-  ├── openenvx/         # Project generator CLI (create-openenvx-app)
-  └── envtyped/         # Typed env validation library (@openenvx/envtyped)
+  └── openenvx/         # Project generator CLI (openenvx)
 /envx/                  # Go CLI for secure env management
-/runtime/               # oexctl - Go control plane CLI for local dev proxy
 ```
 
-## oexctl - Control Plane CLI
+## Local Development with Portless
 
-The `oexctl` CLI provides local development proxying with automatic TLS and subdomain routing.
+This project uses [portless](https://github.com/zuplo/portless) for local development reverse proxy with automatic TLS and named .localhost URLs.
+
+### Installation
 
 ```bash
-# Install (via openenvx init or curl)
-openenvx init  # Installs oexctl binary
-
-# Run an app with proxy
-oexctl proxy run myapp -- npm run dev
-
-# Access at https://myapp.localhost:1355
+npm install -g portless
 ```
 
-**Features:**
-- Automatic TLS certificate generation
-- Subdomain-based routing (*.localhost:1355)
-- No DNS configuration needed
-- Route management for multiple apps
+### Usage
+
+```bash
+# Run an app with automatic proxy
+portless run next dev
+# -> http://<project>.localhost:1355
+
+# Or with explicit name
+portless myapp next dev
+# -> http://myapp.localhost:1355
+```
+
+Add to package.json scripts:
+
+```json
+{
+  "scripts": {
+    "dev": "portless run next dev"
+  }
+}
+```
+
+### Features
+
+- Automatic TLS certificate generation (with `--https`)
+- Named .localhost URLs (no more port conflicts)
+- Git worktree support (branch names as subdomains)
+- Works with Next.js, Vite, Astro, and most frameworks
 
 ## Conventions
 
@@ -86,7 +103,7 @@ oexctl proxy run myapp -- npm run dev
 - Prefer `import type` for type-only imports
 - Named exports preferred over default exports
 - Use Zod for runtime validation
-- Custom error classes for domain errors (e.g., `EnvValidationError`)
+- Custom error classes for domain errors
 
 **Go:**
 
@@ -116,7 +133,58 @@ oexctl proxy run myapp -- npm run dev
 
 ## Package Publishing
 
-Packages are published to npm under the `@openenvx` scope:
+Packages are published to npm:
 
-- `@openenvx/envtyped` - Typed environment validation
 - `openenvx` - Project generator CLI
+
+## Local Package Development with Verdaccio
+
+The example app (`/example`) is generated using the `packages/openenvx` CLI and consumes packages published to a local Verdaccio registry.
+
+### Overview
+
+- **Example App Location**: `/example/apps/admin/`
+- **Package**: `@openenvx/admin` is published locally to Verdaccio
+- **Registry URL**: `http://localhost:4873`
+- **Configuration**: `verdaccio.yaml`
+
+### Running Verdaccio
+
+1. **Start the Verdaccio server**:
+   ```bash
+   npx verdaccio --config verdaccio.yaml
+   ```
+   The registry will be available at `http://localhost:4873`
+
+2. **Build and publish packages to local registry**:
+   ```bash
+   # Build the admin package
+   cd packages/admin
+   bun run build
+   
+   # Publish to local verdaccio
+   npm publish --registry http://localhost:4873
+   ```
+
+3. **Install packages in example app from Verdaccio**:
+   ```bash
+   cd example/apps/admin
+   bun install
+   ```
+
+The example app's `.npmrc` is configured to fetch `@openenvx` packages from the local registry:
+```
+@openenvx:registry=http://localhost:4873
+```
+
+### Development Workflow
+
+When making changes to `@openenvx/admin`:
+
+1. Make changes to the package source
+2. Bump the version in `packages/admin/package.json` if needed
+3. Build: `bun run build`
+4. Publish to Verdaccio: `npm publish --registry http://localhost:4873`
+5. Update the version in `example/apps/admin/package.json`
+6. Reinstall in example app: `bun install`
+

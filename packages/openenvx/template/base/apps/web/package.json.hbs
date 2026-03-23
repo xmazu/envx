@@ -3,14 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "oexctl proxy run web -- npx next dev --turbopack",
+    "dev": "portless run next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@{{projectName}}/ui": "workspace:*",
-    "@openenvx/envtyped": "^0.4.0",
+    "@t3-oss/env-nextjs": "^0.12.0",
     "next": "16.1.6",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",

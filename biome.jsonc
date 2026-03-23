@@ -6,5 +6,19 @@
       "quoteStyle": "single",
       "jsxQuoteStyle": "double"
     }
+  },
+  "linter": {
+    "rules": {
+      "performance": {
+        "noNamespaceImport": "off",
+        "noBarrelFile": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noEmptyBlockStatements": "off"
+      }
+    }
   }
 }

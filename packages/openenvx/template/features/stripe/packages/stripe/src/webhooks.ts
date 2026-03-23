@@ -4,7 +4,6 @@ export function handleWebhook(payload: string, signature: string) {
   const event = stripe.webhooks.constructEvent(
     payload,
     signature,
-    // biome-ignore lint/style/noNonNullAssertion: Template file - env var will be set by user
     process.env.STRIPE_WEBHOOK_SECRET!
   );
 

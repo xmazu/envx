@@ -13,6 +13,7 @@ export interface ProjectConfig {
     stripe: boolean;
     storage: boolean;
     email: boolean;
+    admin: boolean;
   };
   name: string;
   projectName: string;
@@ -25,7 +26,6 @@ export interface State {
 
 export interface GenerateContext {
   config: ProjectConfig;
-  hasOexctl: boolean;
   packageManager: PackageManager;
   state: State;
   targetDir: string;
