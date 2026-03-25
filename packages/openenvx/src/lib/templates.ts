@@ -2,7 +2,7 @@ import path from 'node:path';
 import fs from 'fs-extra';
 import { globby } from 'globby';
 import Handlebars from 'handlebars';
-import { dependencyCatalog } from './constants';
+import { dependencyCatalog, devDependencyCatalog } from './constants';
 import type { PackageManager, ProjectConfig } from './types';
 import { getTemplatesDir } from './utils';
 
@@ -18,21 +18,34 @@ function generateRootPackageJson(
       build: 'turbo build',
       dev: 'turbo dev',
       lint: 'turbo lint',
+      format: 'prettier --write "**/*.{ts,tsx,md}"',
       'db:generate': 'turbo db:generate',
       'db:migrate': 'turbo db:migrate',
       'db:studio': 'turbo db:studio',
     },
     devDependencies: {
+      '@biomejs/biome': 'catalog:dev',
       portless: '^0.6.0',
-      turbo: '^2.8.13',
-      typescript: 'catalog:',
+      turbo: '2.8.13',
+      typescript: 'catalog:dev',
     },
     packageManager: packageManager === 'bun' ? 'bun@1.3.2' : 'pnpm@10.30.3',
+    workspaces: ['apps/*', 'packages/*'],
+    engines: {
+      node: '>=20',
+    },
   };
 
   const bunSpecific =
     packageManager === 'bun'
-      ? { workspaces: ['apps/*', 'packages/*'], catalog: dependencyCatalog }
+      ? {
+          workspaces: ['apps/*', 'packages/*'],
+          catalog: dependencyCatalog,
+          catalogs: {
+            // biome-ignore lint/correctness/noUndeclaredVariables: This is injected at runtime by the CLI
+            dev: devDependencyCatalog,
+          },
+        }
       : {};
 
   return JSON.stringify({ ...basePackageJson, ...bunSpecific }, null, 2);
@@ -46,6 +59,12 @@ function generatePnpmWorkspaceYaml(): string {
 catalog:
 ${Object.entries(dependencyCatalog)
   .map(([name, version]) => `  ${name}: ${version}`)
+  .join('\n')}
+
+catalogs:
+  dev:
+${Object.entries(devDependencyCatalog)
+  .map(([name, version]) => `    ${name}: ${version}`)
   .join('\n')}
 `;
 }

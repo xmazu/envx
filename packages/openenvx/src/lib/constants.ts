@@ -1,12 +1,43 @@
 export const dependencyCatalog = {
-  react: '^19.2.4',
-  'react-dom': '^19.2.4',
+  // Core
+  react: '^19.2.0',
+  'react-dom': '^19.2.0',
+  // TanStack
+  '@tanstack/react-router': '^1.168.4',
+  '@tanstack/react-start': '^1.167.7',
+  '@tanstack/router-plugin': '^1.167.5',
+  '@tanstack/react-router-devtools': '^1.166.1',
+  '@tanstack/react-router-ssr-query': '^1.166.10',
+  '@tanstack/react-devtools': '^0.9.13',
+  '@tanstack/devtools-vite': '^0.6.0',
+  // UI
+  tailwindcss: '^4.1.18',
+  '@tailwindcss/typography': '^0.5.16',
+  '@tailwindcss/vite': '^4.1.18',
+  '@tailwindcss/postcss': '^4',
+  'lucide-react': '^0.575.0',
+  // Forms
+  '@hookform/resolvers': '^5.2.2',
+  'react-hook-form': '^7.54.0',
+  // Validation
+  zod: '^4.3.0',
+  // Env
+  '@t3-oss/env-core': '^0.13.11',
+  // Dev dependencies
+  typescript: '^5.7.2',
+  '@types/react': '^19.2.0',
+  '@types/react-dom': '^19.2.0',
+  '@types/node': '^22.10.2',
+  '@biomejs/biome': '^2.4.5',
+  vite: '^7.3.1',
+  'vite-tsconfig-paths': '^5.1.4',
+  '@vitejs/plugin-react': '^5.1.4',
+  vitest: '^3.0.5',
+  jsdom: '^28.1.0',
+  '@testing-library/react': '^16.3.0',
+  '@testing-library/dom': '^10.4.1',
+  // Other
   next: '^16.1.6',
-  typescript: '^5.9.3',
-  '@types/react': '^19.2.14',
-  '@types/react-dom': '^19.2.3',
-  '@types/node': '^25.3.3',
-  tailwindcss: '^4.2.1',
   postcss: '^8.5.8',
   autoprefixer: '^10.4.27',
   'drizzle-orm': '^0.45.1',
@@ -17,11 +48,24 @@ export const dependencyCatalog = {
   clsx: '^2.1.1',
   'tailwind-merge': '^3.5.0',
   'tw-animate-css': '1.3.6',
-  '@tailwindcss/postcss': '^4',
-  zod: '^4.3.0',
-  'lucide-react': '^0.575.0',
-  '@hookform/resolvers': '^3.10.0',
-  'react-hook-form': '^7.54.0',
+} as const;
+
+export const devDependencyCatalog = {
+  '@biomejs/biome': '^2.4.5',
+  '@tailwindcss/typography': '^0.5.16',
+  '@tailwindcss/vite': '^4.1.18',
+  '@tanstack/devtools-vite': '^0.6.0',
+  '@testing-library/dom': '^10.4.1',
+  '@testing-library/react': '^16.3.0',
+  '@types/node': '^22.10.2',
+  '@types/react': '^19.2.0',
+  '@types/react-dom': '^19.2.0',
+  '@vitejs/plugin-react': '^5.1.4',
+  jsdom: '^28.1.0',
+  typescript: '^5.7.2',
+  vite: '^7.3.1',
+  'vite-tsconfig-paths': '^5.1.4',
+  vitest: '^3.0.5',
 } as const;
 
 export const SHADCN_COMPONENTS = [
@@ -40,16 +84,4 @@ export const SHADCN_COMPONENTS = [
   'skeleton',
   'table',
   'tooltip',
-] as const;
-
-// Refine.dev shadcn registry components for admin
-export const REFINE_REGISTRY_COMPONENTS = [
-  'https://ui.refine.dev/r/auto-save-indicator.json',
-  'https://ui.refine.dev/r/views.json',
-  'https://ui.refine.dev/r/data-table.json',
-  'https://ui.refine.dev/r/forms.json',
-  'https://ui.refine.dev/r/buttons.json',
-  'https://ui.refine.dev/r/layout.json',
-  'https://ui.refine.dev/r/error.json',
-  'https://ui.refine.dev/r/notification-provider.json',
 ] as const;

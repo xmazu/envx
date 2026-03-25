@@ -19,7 +19,7 @@ const program = new Command();
 
 program
   .name('openenvx')
-  .description('OpenEnvx CLI - Create and manage OpenEnvx SaaS appsXD')
+  .description('OpenEnvx CLI - Create and manage OpenEnvx SaaS appDUPA')
   .version('0.0.1');
 
 program
