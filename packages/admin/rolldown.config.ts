@@ -17,6 +17,9 @@ const externalDeps = [
   'class-variance-authority',
   'clsx',
   'postgres',
+  'react-hook-form',
+  '@hookform/resolvers',
+  'zod',
 ];
 
 const external = (id: string) => {
@@ -33,6 +36,7 @@ export default defineConfig([
       file: 'dist/server.js',
       format: 'esm',
       sourcemap: true,
+      // banner: "'use server';",
     },
     external,
     resolve: {
@@ -45,6 +49,7 @@ export default defineConfig([
       file: 'dist/client.js',
       format: 'esm',
       sourcemap: true,
+      banner: "'use client';",
     },
     external,
     resolve: {
