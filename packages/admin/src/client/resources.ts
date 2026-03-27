@@ -1,9 +1,11 @@
+import type { ReactNode } from 'react';
+
 export interface ResourceRouteComposition {
   path?: string;
 }
 
 export interface ResourceMeta {
-  icon?: string;
+  icon?: ReactNode;
   label?: string;
   [key: string]: unknown;
 }
@@ -17,7 +19,7 @@ export interface IResourceComponents {
 }
 
 export interface ResourceProps extends IResourceComponents {
-  icon?: string;
+  icon?: ReactNode;
   identifier?: string;
   label?: string;
   meta?: ResourceMeta;
@@ -30,8 +32,8 @@ export interface AdminResource extends ResourceProps {
 }
 
 export interface AdminResourcesConfig {
-  /** Default icon for resources */
-  defaultIcon?: string;
+  /** Base path for admin routes (e.g., '/admin' -> routes become '/admin/users') */
+  basePath?: string;
   /** Tables to exclude from the admin panel */
   exclude?: string[];
   /** PostgREST API URL */
@@ -70,13 +72,15 @@ async function fetchTables(postgrestUrl: string): Promise<string[]> {
  *
  * @example
  * ```typescript
+ * import { Users } from 'lucide-react';
+ *
  * const resources = await createAdminResources({
  *   postgrestUrl: 'http://localhost:3001',
  *   exclude: ['migrations'],
  *   resources: {
  *     users: {
  *       label: 'Team Members',
- *       meta: { icon: 'Users' }
+ *       meta: { icon: <Users className="h-4 w-4" /> }
  *     }
  *   }
  * });
@@ -85,15 +89,14 @@ async function fetchTables(postgrestUrl: string): Promise<string[]> {
 export async function createAdminResources(
   config: AdminResourcesConfig
 ): Promise<AdminResource[]> {
-  const {
-    postgrestUrl,
-    exclude = [],
-    resources = {},
-    defaultIcon = 'FileText',
-  } = config;
+  const { basePath = '', postgrestUrl, exclude = [], resources = {} } = config;
 
   const tableNames = await fetchTables(postgrestUrl);
   const adminResources: AdminResource[] = [];
+
+  const normalizedBasePath = basePath
+    ? `${basePath.startsWith('/') ? '' : '/'}${basePath.replace(/\/$/, '')}`
+    : '';
 
   for (const tableName of tableNames) {
     // Skip excluded tables
@@ -111,15 +114,13 @@ export async function createAdminResources(
 
     const resource: AdminResource = {
       name: tableName,
-      list: `/${tableName}`,
-      create: `/${tableName}/create`,
-      edit: `/${tableName}/edit/:id`,
-      show: `/${tableName}/show/:id`,
+      list: `${normalizedBasePath}/${tableName}`,
+      create: `${normalizedBasePath}/${tableName}/create`,
+      edit: `${normalizedBasePath}/${tableName}/edit/:id`,
+      show: `${normalizedBasePath}/${tableName}/show/:id`,
       label: customConfig.label || capitalize(tableName),
-      icon: customConfig.icon || defaultIcon,
       meta: {
         label: customConfig.label || capitalize(tableName),
-        icon: customConfig.icon || defaultIcon,
         ...customConfig.meta,
       },
       ...customConfig,

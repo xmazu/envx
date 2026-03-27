@@ -48,7 +48,11 @@ export {
   type UseResourceParamsResult,
   useResourceParams,
 } from './use-resource-params';
-export { ResourcesProvider, useResources } from './use-resources';
+export {
+  ResourcesContext,
+  ResourcesProvider,
+  useResources,
+} from './use-resources';
 export { type UseShowConfig, type UseShowResult, useShow } from './use-show';
 export { useTranslate } from './use-translate';
 export { useUserFriendlyName } from './use-user-friendly-name';

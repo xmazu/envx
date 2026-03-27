@@ -10,7 +10,7 @@ interface ResourcesContextValue {
   selectedKey?: string;
 }
 
-const ResourcesContext = createContext<ResourcesContextValue>({
+export const ResourcesContext = createContext<ResourcesContextValue>({
   resources: [],
   menuItems: [],
 });
@@ -29,7 +29,10 @@ export function ResourcesProvider({
   customResources,
 }: ResourcesProviderProps) {
   const value = useMemo(() => {
-    const allResources = customResources ?? resources;
+    const allResources =
+      customResources && customResources.length > 0
+        ? customResources
+        : resources;
     const menuItems = buildMenuItems(allResources);
 
     return {

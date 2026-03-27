@@ -1,6 +1,7 @@
 export type { AdminResource, AdminResourcesConfig } from './client/resources';
 
 export { createAdminResources } from './client/resources';
+export type { AdminProviderProps } from './components/admin-provider';
 export { AdminProvider } from './components/admin-provider';
 export { AutoForm } from './components/auto-form';
 export type {
@@ -18,6 +19,7 @@ export {
   useResourceConfig,
   useResources,
 } from './components/resource-provider';
+export { ResourcesProvider } from './hooks';
 export { detectCircularDependencies } from './lib/circular-deps';
 export type {
   ListActionsSlotProps,

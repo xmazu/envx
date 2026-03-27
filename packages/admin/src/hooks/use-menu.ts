@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { resources as defaultResources } from '@/lib/resource-config';
 import type { IResourceItem, TreeMenuItem } from '@/types';
+import { ResourcesContext } from './use-resources';
 
 export interface UseMenuResult {
   menuItems: TreeMenuItem[];
@@ -10,15 +11,23 @@ export interface UseMenuResult {
 }
 
 export function useMenu(customResources?: IResourceItem[]): UseMenuResult {
+  const context = useContext(ResourcesContext);
+
   return useMemo(() => {
-    const allResources = customResources ?? defaultResources;
+    let allResources = defaultResources;
+    if (customResources && customResources.length > 0) {
+      allResources = customResources;
+    } else if (context?.resources && context.resources.length > 0) {
+      allResources = context.resources;
+    }
+
     const menuItems = buildMenuItems(allResources);
 
     return {
       menuItems,
-      selectedKey: undefined,
+      selectedKey: context?.selectedKey,
     };
-  }, [customResources]);
+  }, [customResources, context]);
 }
 
 function buildMenuItems(resources: IResourceItem[]): TreeMenuItem[] {
