@@ -7,13 +7,13 @@ import { Layout } from '@/ui/layout/layout';
 
 export interface AdminProviderProps {
   children: React.ReactNode;
-  resources?: IResourceItem[];
+  resources: IResourceItem[];
 }
 
 export const AdminProvider = ({ children, resources }: AdminProviderProps) => {
   return (
     <AdminContextProvider>
-      <ResourcesProvider customResources={resources}>
+      <ResourcesProvider resources={resources}>
         <Layout>{children}</Layout>
       </ResourcesProvider>
     </AdminContextProvider>
