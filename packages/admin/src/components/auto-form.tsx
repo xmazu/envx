@@ -1,12 +1,21 @@
 'use client';
 
-import { AlertCircle, Loader2 } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useMemo } from 'react';
+import {
+  FormProvider,
+  useForm,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form';
+import { FieldArray } from '@/components/field-array';
+import { RelationshipField } from '@/components/relationship-field';
 import type {
+  ArrayFieldConfig,
   FieldConfig,
-  FormViewConfig,
   ResourceConfig,
-} from '@/lib/resource-protocol';
+} from '@/lib/resource-types';
+import { generateZodSchema } from '@/lib/schema-generator';
 import { cn } from '@/lib/utils';
 import { Alert, AlertDescription } from '@/ui/shadcn/alert';
 import { Button } from '@/ui/shadcn/button';
@@ -17,163 +26,207 @@ import {
   CardHeader,
   CardTitle,
 } from '@/ui/shadcn/card';
-import { FieldRenderer } from './field-renderer';
-
-// ============================================================================
-// Form Configuration Types
-// ============================================================================
 
 export interface AutoFormProps {
-  /** Additional CSS classes */
   className?: string;
-  /** Error message */
   error?: string | null;
-  /** Initial form data (for edit mode) */
   initialData?: Record<string, unknown>;
-  /** Loading state */
   isLoading?: boolean;
-  /** Form mode */
   mode: 'create' | 'edit';
-  /** Form submission handler */
   onSubmit: (data: Record<string, unknown>) => Promise<void>;
-  /** Resource configuration */
   resourceConfig: ResourceConfig;
 }
 
-// ============================================================================
-// Form Field State
-// ============================================================================
+function ConditionalField({
+  field,
+  children,
+}: {
+  field: FieldConfig;
+  children: React.ReactNode;
+}) {
+  const form = useFormContext();
+  const watchAll = form.watch();
 
-interface FieldState {
-  error?: string;
-  touched: boolean;
-  value: unknown;
-}
+  const isVisible = useMemo(() => {
+    if (field.hidden) {
+      return false;
+    }
+    if (field.condition) {
+      return field.condition(watchAll);
+    }
+    return true;
+  }, [field, watchAll]);
 
-interface FormState {
-  fields: Record<string, FieldState>;
-  isSubmitting: boolean;
-  submitError: string | null;
-}
-
-// ============================================================================
-// Validation Utilities
-// ============================================================================
-
-function validateField(field: FieldConfig, value: unknown): string | undefined {
-  // Required check
-  if (
-    field.required &&
-    (value === undefined || value === null || value === '')
-  ) {
-    return `${field.label || field.name} is required`;
+  if (!isVisible) {
+    return null;
   }
 
-  // Skip further validation if value is empty and not required
-  if (value === undefined || value === null || value === '') {
-    return undefined;
-  }
+  return <>{children}</>;
+}
 
-  // Type-specific validation
+function ComputedField({ field }: { field: FieldConfig }) {
+  const form = useFormContext();
+
+  const computedConfig = field.computed;
+  const isConfig =
+    computedConfig &&
+    typeof computedConfig === 'object' &&
+    'deps' in computedConfig;
+  const deps = isConfig ? (computedConfig as { deps: string[] }).deps : [];
+  const depValues = useWatch({ control: form.control, name: deps });
+
+  useEffect(() => {
+    if (!computedConfig) {
+      return;
+    }
+
+    if (isConfig && 'fn' in computedConfig) {
+      const data = Object.fromEntries(
+        deps.map((dep: string, i: number) => [dep, depValues[i]])
+      );
+      const computed = (
+        computedConfig as { fn: (data: Record<string, unknown>) => unknown }
+      ).fn(data);
+      form.setValue(field.name, computed, { shouldValidate: false });
+    } else if (typeof computedConfig === 'function') {
+      const allData = form.getValues();
+      const computed = computedConfig(allData);
+      form.setValue(field.name, computed, { shouldValidate: false });
+    }
+  }, [depValues, field, form, deps, isConfig, computedConfig]);
+
+  return <input type="hidden" {...form.register(field.name)} />;
+}
+
+function FormField({ field }: { field: FieldConfig }) {
+  const form = useFormContext();
+  const error = form.formState.errors[field.name];
+
+  const fieldId = `field-${field.name}`;
+
+  return (
+    <div className="space-y-2">
+      <label className="font-medium text-sm" htmlFor={fieldId}>
+        {field.label || field.name}
+        {field.required && <span className="text-destructive">*</span>}
+      </label>
+
+      {field.computed ? (
+        <ComputedField field={field} />
+      ) : (
+        <FormInput field={field} id={fieldId} />
+      )}
+
+      {error && (
+        <p className="text-destructive text-sm">{error.message as string}</p>
+      )}
+
+      {field.description && (
+        <p className="text-muted-foreground text-sm">{field.description}</p>
+      )}
+    </div>
+  );
+}
+
+function FormInput({ field, id }: { field: FieldConfig; id?: string }) {
+  const form = useFormContext();
+  const { register } = form;
+
+  const commonProps = {
+    ...register(field.name),
+    id,
+    disabled: field.readOnly || form.formState.isSubmitting,
+    className: cn(
+      'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+      form.formState.errors[field.name] && 'border-destructive'
+    ),
+  };
+
   switch (field.type) {
-    case 'email': {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (typeof value === 'string' && !emailRegex.test(value)) {
-        return 'Please enter a valid email address';
-      }
-      break;
-    }
-    case 'url': {
-      try {
-        if (typeof value === 'string') {
-          new URL(value);
-        }
-      } catch {
-        return 'Please enter a valid URL';
-      }
-      break;
-    }
+    case 'textarea':
+      return (
+        <textarea
+          {...commonProps}
+          rows={(field as { rows?: number }).rows || 3}
+        />
+      );
+
+    case 'boolean':
+      return (
+        <input
+          type="checkbox"
+          {...register(field.name)}
+          className="h-4 w-4 rounded border-gray-300"
+          disabled={field.readOnly || form.formState.isSubmitting}
+        />
+      );
+
+    case 'select':
+      return (
+        <select {...commonProps}>
+          <option value="">Select...</option>
+          {(
+            (
+              field as {
+                options: Array<{ value: string; label?: string } | string>;
+              }
+            ).options || []
+          ).map((opt) => {
+            const value = typeof opt === 'object' ? opt.value : opt;
+            const label =
+              typeof opt === 'object' ? opt.label || opt.value : opt;
+            return (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            );
+          })}
+        </select>
+      );
+
+    case 'date':
+      return <input type="date" {...commonProps} />;
+
+    case 'datetime':
+      return <input type="datetime-local" {...commonProps} />;
+
+    case 'password':
+      return <input type="password" {...commonProps} />;
+
+    case 'email':
+      return <input type="email" {...commonProps} />;
+
     case 'number':
-    case 'integer': {
-      const numConfig = field as Extract<
-        FieldConfig,
-        { type: 'number' | 'integer' }
-      >;
-      const num =
-        typeof value === 'string'
-          ? Number.parseFloat(value)
-          : (value as number);
+    case 'integer':
+      return (
+        <input
+          type="number"
+          {...commonProps}
+          max={(field as { max?: number }).max}
+          min={(field as { min?: number }).min}
+          step={field.type === 'integer' ? 1 : 'any'}
+        />
+      );
 
-      if (Number.isNaN(num)) {
-        return 'Please enter a valid number';
-      }
+    case 'color':
+      return (
+        <input
+          type="color"
+          {...commonProps}
+          className={cn(commonProps.className, 'h-10 p-1')}
+        />
+      );
 
-      if (numConfig.min !== undefined && num < numConfig.min) {
-        return `Value must be at least ${numConfig.min}`;
-      }
+    case 'array':
+      return <FieldArray field={field as ArrayFieldConfig} />;
 
-      if (numConfig.max !== undefined && num > numConfig.max) {
-        return `Value must be at most ${numConfig.max}`;
-      }
-      break;
-    }
-    case 'text': {
-      const textConfig = field as Extract<FieldConfig, { type: 'text' }>;
-      const str = String(value);
+    case 'reference':
+      return <RelationshipField field={field} />;
 
-      if (
-        textConfig.minLength !== undefined &&
-        str.length < textConfig.minLength
-      ) {
-        return `Must be at least ${textConfig.minLength} characters`;
-      }
-
-      if (
-        textConfig.maxLength !== undefined &&
-        str.length > textConfig.maxLength
-      ) {
-        return `Must be at most ${textConfig.maxLength} characters`;
-      }
-      break;
-    }
-    case 'textarea': {
-      const textareaConfig = field as Extract<
-        FieldConfig,
-        { type: 'textarea' }
-      >;
-      const str = String(value);
-
-      if (
-        textareaConfig.minLength !== undefined &&
-        str.length < textareaConfig.minLength
-      ) {
-        return `Must be at least ${textareaConfig.minLength} characters`;
-      }
-
-      if (
-        textareaConfig.maxLength !== undefined &&
-        str.length > textareaConfig.maxLength
-      ) {
-        return `Must be at most ${textareaConfig.maxLength} characters`;
-      }
-      break;
-    }
+    default:
+      return <input type="text" {...commonProps} />;
   }
-
-  // Custom validation
-  if (field.validate) {
-    const result = field.validate(value);
-    if (result !== true) {
-      return result;
-    }
-  }
-
-  return undefined;
 }
-
-// ============================================================================
-// AutoForm Component
-// ============================================================================
 
 export function AutoForm({
   resourceConfig,
@@ -184,162 +237,40 @@ export function AutoForm({
   className,
   mode,
 }: AutoFormProps) {
-  // Get visible fields (not hidden)
-  const visibleFields = useMemo(() => {
-    if (!resourceConfig.fields) {
-      return [];
-    }
-    return resourceConfig.fields.filter((f) => !f.hidden);
-  }, [resourceConfig.fields]);
+  const visibleFields = useMemo(
+    () => resourceConfig.fields.filter((f) => !f.hidden),
+    [resourceConfig.fields]
+  );
 
-  // Initialize form state
-  const [formState, setFormState] = useState<FormState>(() => {
-    const fields: Record<string, FieldState> = {};
+  const schema = useMemo(
+    () => generateZodSchema(visibleFields),
+    [visibleFields]
+  );
 
+  const defaultValues = useMemo(() => {
+    const values: Record<string, unknown> = {};
     for (const field of visibleFields) {
-      const initialValue =
-        initialData?.[field.name] ?? field.defaultValue ?? null;
-      fields[field.name] = {
-        value: initialValue,
-        touched: false,
-        error: validateField(field, initialValue),
-      };
+      values[field.name] =
+        initialData?.[field.name] ?? field.defaultValue ?? '';
     }
+    return values;
+  }, [visibleFields, initialData]);
 
-    return {
-      fields,
-      isSubmitting: false,
-      submitError: externalError || null,
-    };
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues,
+    mode: 'onBlur',
   });
 
-  // Update external error
-  if (externalError && externalError !== formState.submitError) {
-    setFormState((prev) => ({ ...prev, submitError: externalError }));
-  }
-
-  // Handle field change
-  const handleFieldChange = useCallback(
-    (fieldName: string, value: unknown) => {
-      setFormState((prev) => {
-        const field = visibleFields.find((f) => f.name === fieldName);
-        if (!field) {
-          return prev;
-        }
-
-        return {
-          ...prev,
-          fields: {
-            ...prev.fields,
-            [fieldName]: {
-              ...prev.fields[fieldName],
-              value,
-              error: prev.fields[fieldName]?.touched
-                ? validateField(field, value)
-                : undefined,
-            },
-          },
-        };
-      });
-    },
-    [visibleFields]
-  );
-
-  // Handle field blur (mark as touched and validate)
-  const handleFieldBlur = useCallback(
-    (fieldName: string) => {
-      setFormState((prev) => {
-        const field = visibleFields.find((f) => f.name === fieldName);
-        if (!field) {
-          return prev;
-        }
-
-        const value = prev.fields[fieldName]?.value;
-        return {
-          ...prev,
-          fields: {
-            ...prev.fields,
-            [fieldName]: {
-              ...prev.fields[fieldName],
-              touched: true,
-              error: validateField(field, value),
-            },
-          },
-        };
-      });
-    },
-    [visibleFields]
-  );
-
-  // Handle form submission
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-
-      // Validate all fields
-      const newFields: Record<string, FieldState> = {};
-      let hasErrors = false;
-
-      for (const field of visibleFields) {
-        const fieldState = formState.fields[field.name];
-        const error = validateField(field, fieldState?.value);
-
-        newFields[field.name] = {
-          ...fieldState,
-          touched: true,
-          error,
-        };
-
-        if (error) {
-          hasErrors = true;
-        }
-      }
-
-      setFormState((prev) => ({
-        ...prev,
-        fields: newFields,
-        submitError: null,
-      }));
-
-      if (hasErrors) {
-        return;
-      }
-
-      // Build submission data
-      const submitData: Record<string, unknown> = {};
-      for (const field of visibleFields) {
-        const value = formState.fields[field.name]?.value;
-        // Don't submit null values for optional fields
-        if (value !== undefined && value !== null) {
-          submitData[field.name] = value;
-        }
-      }
-
-      // Submit
-      setFormState((prev) => ({ ...prev, isSubmitting: true }));
-
-      try {
-        await onSubmit(submitData);
-        setFormState((prev) => ({ ...prev, isSubmitting: false }));
-      } catch (err) {
-        setFormState((prev) => ({
-          ...prev,
-          isSubmitting: false,
-          submitError: err instanceof Error ? err.message : 'An error occurred',
-        }));
-      }
-    },
-    [visibleFields, formState.fields, onSubmit]
-  );
-
-  // Get form configuration
-  const formConfig: FormViewConfig = resourceConfig.form || {};
+  const formConfig = resourceConfig.form || {};
   const layout = formConfig.layout || 'vertical';
   const columns = formConfig.columns || 1;
 
-  // Render field groups or flat list
+  const handleSubmit = async (data: Record<string, unknown>) => {
+    await onSubmit(data);
+  };
+
   const renderFields = () => {
-    // If groups are defined, render them
     if (formConfig.groups && formConfig.groups.length > 0) {
       return (
         <div className="space-y-6">
@@ -352,14 +283,37 @@ export function AutoForm({
               return null;
             }
 
-            return (
-              <Card key={index}>
-                {group.title && (
+            const groupKey = group.label || `group-${index}`;
+
+            if (group.type === 'tab' || group.type === 'collapsible') {
+              return (
+                <Card key={groupKey}>
                   <CardHeader>
-                    <CardTitle className="text-lg">{group.title}</CardTitle>
+                    <CardTitle className="text-lg">{group.label}</CardTitle>
                   </CardHeader>
+                  <CardContent
+                    className={cn(
+                      'grid gap-4',
+                      layout === 'grid' &&
+                        `grid-cols-1 md:grid-cols-${group.columns || columns}`
+                    )}
+                  >
+                    {groupFields.map((field) => (
+                      <ConditionalField field={field} key={field.name}>
+                        <FormField field={field} />
+                      </ConditionalField>
+                    ))}
+                  </CardContent>
+                </Card>
+              );
+            }
+
+            return (
+              <div className="space-y-4" key={groupKey}>
+                {group.label && (
+                  <h3 className="font-medium text-lg">{group.label}</h3>
                 )}
-                <CardContent
+                <div
                   className={cn(
                     'grid gap-4',
                     layout === 'grid' &&
@@ -367,25 +321,18 @@ export function AutoForm({
                   )}
                 >
                   {groupFields.map((field) => (
-                    <FieldRenderer
-                      disabled={isLoading || formState.isSubmitting}
-                      error={formState.fields[field.name]?.error}
-                      field={field}
-                      key={field.name}
-                      onBlur={() => handleFieldBlur(field.name)}
-                      onChange={(value) => handleFieldChange(field.name, value)}
-                      value={formState.fields[field.name]?.value}
-                    />
+                    <ConditionalField field={field} key={field.name}>
+                      <FormField field={field} />
+                    </ConditionalField>
                   ))}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             );
           })}
         </div>
       );
     }
 
-    // Otherwise, render flat list of fields
     return (
       <div
         className={cn(
@@ -395,43 +342,38 @@ export function AutoForm({
         )}
       >
         {visibleFields.map((field) => (
-          <FieldRenderer
-            disabled={isLoading || formState.isSubmitting}
-            error={formState.fields[field.name]?.error}
-            field={field}
-            key={field.name}
-            onBlur={() => handleFieldBlur(field.name)}
-            onChange={(value) => handleFieldChange(field.name, value)}
-            value={formState.fields[field.name]?.value}
-          />
+          <ConditionalField field={field} key={field.name}>
+            <FormField field={field} />
+          </ConditionalField>
         ))}
       </div>
     );
   };
 
   return (
-    <form className={cn('space-y-6', className)} onSubmit={handleSubmit}>
-      {formState.submitError && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{formState.submitError}</AlertDescription>
-        </Alert>
-      )}
+    <FormProvider {...form}>
+      <form
+        className={cn('space-y-6', className)}
+        onSubmit={form.handleSubmit(handleSubmit)}
+      >
+        {externalError && (
+          <Alert variant="destructive">
+            <AlertDescription>{externalError}</AlertDescription>
+          </Alert>
+        )}
 
-      {renderFields()}
+        {renderFields()}
 
-      <CardFooter className="px-0 pt-4">
-        <Button
-          className="min-w-[120px]"
-          disabled={isLoading || formState.isSubmitting}
-          type="submit"
-        >
-          {(isLoading || formState.isSubmitting) && (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          )}
-          {mode === 'create' ? 'Create' : 'Save Changes'}
-        </Button>
-      </CardFooter>
-    </form>
+        <CardFooter className="px-0 pt-4">
+          <Button
+            className="min-w-[120px]"
+            disabled={isLoading || form.formState.isSubmitting}
+            type="submit"
+          >
+            {mode === 'create' ? 'Create' : 'Save Changes'}
+          </Button>
+        </CardFooter>
+      </form>
+    </FormProvider>
   );
 }

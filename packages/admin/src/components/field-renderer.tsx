@@ -1,7 +1,7 @@
 'use client';
 
 import type { ChangeEvent } from 'react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { FieldConfig, SelectOption } from '@/lib/resource-protocol';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/ui/shadcn/checkbox';
@@ -749,6 +749,26 @@ function DateFieldRenderer({
 // Reference Field
 // ============================================================================
 
+interface ReferenceFieldLabelProps {
+  label: string;
+  loading: boolean;
+  value: unknown;
+}
+
+function ReferenceFieldLabel({
+  loading,
+  label,
+  value,
+}: ReferenceFieldLabelProps) {
+  if (loading) {
+    return <p className="text-muted-foreground text-sm">Loading...</p>;
+  }
+  if (label && label !== String(value)) {
+    return <p className="text-muted-foreground text-sm">{label}</p>;
+  }
+  return null;
+}
+
 function ReferenceFieldRenderer({
   field,
   value,
@@ -757,8 +777,28 @@ function ReferenceFieldRenderer({
   error,
   disabled,
 }: FieldRendererProps) {
-  // TODO: Implement reference field with autocomplete/search
-  // For now, render as text input
+  const config = field as Extract<FieldConfig, { type: 'reference' }>;
+  const [label, setLabel] = useState<string>(String(value ?? ''));
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (value && config.reference?.table) {
+      setLoading(true);
+      fetch(`/api/admin/relationships/${config.reference.table}?id=${value}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const item = data.find(
+            (d: { id: unknown }) => String(d.id) === String(value)
+          );
+          setLabel(item?.label || String(value));
+        })
+        .catch(() => setLabel(String(value)))
+        .finally(() => setLoading(false));
+    } else {
+      setLabel('');
+    }
+  }, [value, config.reference?.table]);
+
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       onChange(e.target.value || null);
@@ -785,9 +825,7 @@ function ReferenceFieldRenderer({
         type="text"
         value={(value as string) ?? ''}
       />
-      <p className="text-muted-foreground text-sm">
-        {field.description || 'Enter the ID of the referenced record'}
-      </p>
+      <ReferenceFieldLabel label={label} loading={loading} value={value} />
       {error && <p className="text-destructive text-sm">{error}</p>}
     </div>
   );

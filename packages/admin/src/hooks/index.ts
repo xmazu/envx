@@ -39,6 +39,11 @@ export {
   useRefreshButton,
 } from './use-refresh-button';
 export {
+  buildConfigFromSchema,
+  type UseResourceConfigResult,
+  useResourceConfig,
+} from './use-resource-config';
+export {
   type UseResourceParamsOptions,
   type UseResourceParamsResult,
   useResourceParams,
