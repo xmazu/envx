@@ -1,9 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import {
-  createMergedConfig,
-  resourceRegistry,
-} from '@/lib/resource-definition';
-import { autoGenerateField } from '@/lib/resource-protocol';
+import { createMergedConfig, resourceRegistry } from '@/lib/define-resource';
+import { autoGenerateField } from '@/lib/resource-types';
 import {
   fetchColumns,
   fetchReferenceData,

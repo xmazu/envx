@@ -1,3 +1,4 @@
+import { detectCircularDependencies } from './circular-deps';
 import type {
   FieldConfig,
   ForeignKeyInfo,
@@ -46,11 +47,15 @@ export function defineResource(
   tableName: string,
   options: DefineResourceOptions = {}
 ): ResourceDefinition {
+  const fields = options.fields || [];
+
+  detectCircularDependencies(fields);
+
   const resource: ResourceDefinition = {
     tableName,
     config: {
       ...options,
-      fields: options.fields || [],
+      fields,
     },
   };
   resourceRegistry.register(resource);

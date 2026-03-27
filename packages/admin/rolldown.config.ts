@@ -28,7 +28,7 @@ const external = (id: string) => {
 
 export default defineConfig([
   {
-    input: 'src/server/index.ts',
+    input: 'src/server.ts',
     output: {
       file: 'dist/server.js',
       format: 'esm',
@@ -40,7 +40,7 @@ export default defineConfig([
     },
   },
   {
-    input: 'src/client/index.ts',
+    input: 'src/client.ts',
     output: {
       file: 'dist/client.js',
       format: 'esm',
