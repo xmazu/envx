@@ -35,16 +35,13 @@ export const CreateViewHeader = ({
 
   const getUserFriendlyName = useUserFriendlyName();
 
-  const { resource, identifier } = useResourceParams({
+  const { resource } = useResourceParams({
     resource: resourceFromProps,
   });
 
   const title =
     titleFromProps ??
-    getUserFriendlyName(
-      resource?.meta?.label ?? identifier ?? resource?.name,
-      'plural'
-    );
+    getUserFriendlyName(resource?.meta?.label ?? resource?.name, 'plural');
 
   return (
     <div className={cn('flex flex-col', 'gap-4', wrapperClassName)}>
@@ -71,5 +68,3 @@ export const CreateViewHeader = ({
     </div>
   );
 };
-
-CreateView.displayName = 'CreateView';

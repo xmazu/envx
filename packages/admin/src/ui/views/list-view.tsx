@@ -34,19 +34,16 @@ export const ListViewHeader = ({
 }: ListHeaderProps) => {
   const getUserFriendlyName = useUserFriendlyName();
 
-  const { resource, identifier } = useResourceParams({
+  const { resource } = useResourceParams({
     resource: resourceFromProps,
   });
-  const resourceName = identifier ?? resource?.name;
+  const resourceName = resource?.name;
 
   const isCreateButtonVisible = canCreate ?? !!resource?.create;
 
   const title =
     titleFromProps ??
-    getUserFriendlyName(
-      resource?.meta?.label ?? identifier ?? resource?.name,
-      'plural'
-    );
+    getUserFriendlyName(resource?.meta?.label ?? resource?.name, 'plural');
 
   return (
     <div className={cn('flex flex-col', 'gap-4', wrapperClassName)}>
@@ -67,5 +64,3 @@ export const ListViewHeader = ({
     </div>
   );
 };
-
-ListView.displayName = 'ListView';

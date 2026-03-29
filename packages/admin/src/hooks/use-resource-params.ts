@@ -2,7 +2,8 @@
 
 import { useParams, usePathname } from 'next/navigation';
 import { useMemo } from 'react';
-import type { BaseKey, IResourceItem } from '@/types';
+import type { BaseKey } from '@/types';
+import type { ResourceItem } from '@/types/resources';
 import { useResources } from './use-resources';
 
 export interface UseResourceParamsOptions {
@@ -12,8 +13,7 @@ export interface UseResourceParamsOptions {
 export interface UseResourceParamsResult {
   action?: string;
   id?: BaseKey;
-  identifier?: string;
-  resource?: IResourceItem;
+  resource?: ResourceItem;
 }
 
 export function useResourceParams(
@@ -26,12 +26,9 @@ export function useResourceParams(
   return useMemo(() => {
     // If resource is provided in options, use that
     if (options?.resource) {
-      const resource = resources.find(
-        (r) => r.name === options.resource || r.identifier === options.resource
-      );
+      const resource = resources.find((r) => r.name === options.resource);
       return {
         resource,
-        identifier: resource?.identifier ?? resource?.name,
         id: params?.id as BaseKey | undefined,
         action: params?.action as string | undefined,
       };
@@ -53,7 +50,6 @@ export function useResourceParams(
       ) {
         return {
           resource,
-          identifier: resource.identifier ?? resource.name,
           id: params?.id as BaseKey | undefined,
           action: params?.action as string | undefined,
         };
@@ -61,13 +57,11 @@ export function useResourceParams(
 
       // Check if pathname matches any resource route pattern
       const resourceName = resource.name;
-      const resourceIdentifier = resource.identifier ?? resourceName;
 
       // Check for exact match or sub-routes
-      if (segments[0] === resourceName || segments[0] === resourceIdentifier) {
+      if (segments[0] === resourceName) {
         return {
           resource,
-          identifier: resourceIdentifier,
           id: params?.id as BaseKey | undefined,
           action: params?.action as string | undefined,
         };

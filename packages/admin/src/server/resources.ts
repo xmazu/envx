@@ -1,6 +1,5 @@
 import { unstable_cache } from 'next/cache';
-import { resourceRegistry } from '@/lib/define-resource';
-import type { IResourceItem } from '@/types';
+import type { ResourceItem } from '@/types/resources';
 import { fetchTables } from './introspection';
 
 const LABEL_REGEX_UNDERSCORE = /_/g;
@@ -19,32 +18,20 @@ function formatLabel(name: string): string {
 }
 
 export const getResources = unstable_cache(
-  async (): Promise<IResourceItem[]> => {
+  async (): Promise<ResourceItem[]> => {
     const tableNames = await fetchTables();
-    const manualConfigs = resourceRegistry.getAll();
 
-    return tableNames
-      .filter((name) => {
-        const manual = manualConfigs.find((m) => m.tableName === name);
-        return !manual?.config.exclude;
-      })
-      .map((name) => {
-        const manual = manualConfigs.find((m) => m.tableName === name)?.config;
-
-        return {
-          name,
-          identifier: manual?.identifier ?? name,
-          label: manual?.label ?? formatLabel(name),
-          list: `/${name}`,
-          create: `/${name}/create`,
-          edit: `/${name}/edit`,
-          show: `/${name}/show`,
-          meta: {
-            icon: manual?.icon,
-            label: manual?.label,
-          },
-        };
-      });
+    return tableNames.map((name) => ({
+      name,
+      label: formatLabel(name),
+      list: `/${name}`,
+      create: `/${name}/create`,
+      edit: `/${name}/:id/edit`,
+      show: `/${name}/:id`,
+      meta: {
+        label: formatLabel(name),
+      },
+    }));
   },
   ['admin-resources'],
   { revalidate: 60, tags: ['admin-schema'] }

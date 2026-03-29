@@ -1,11 +1,11 @@
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
-import type { IResourceItem, TreeMenuItem } from '@/types';
+import type { ResourceItem, TreeMenuItem } from '@/types/resources';
 
 interface ResourcesContextValue {
   menuItems: TreeMenuItem[];
-  resources: IResourceItem[];
+  resources: ResourceItem[];
   selectedKey?: string;
 }
 
@@ -20,7 +20,7 @@ export function useResources(): ResourcesContextValue {
 
 interface ResourcesProviderProps {
   children: React.ReactNode;
-  resources: IResourceItem[];
+  resources: ResourceItem[];
 }
 
 export function ResourcesProvider({
@@ -40,10 +40,10 @@ export function ResourcesProvider({
   return React.createElement(ResourcesContext.Provider, { value }, children);
 }
 
-function buildMenuItems(resources: IResourceItem[]): TreeMenuItem[] {
+function buildMenuItems(resources: ResourceItem[]): TreeMenuItem[] {
   return resources.map((resource) => ({
     name: resource.name,
-    key: resource.identifier ?? resource.name,
+    key: resource.name,
     route: resource.list,
     label: resource.meta?.label ?? resource.label ?? resource.name,
     icon: resource.meta?.icon ?? resource.icon,

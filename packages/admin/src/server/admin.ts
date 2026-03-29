@@ -22,6 +22,8 @@ export interface AdminAuthConfig {
   onAuthFailure?: (request: NextRequest) => NextResponse;
 }
 
+export type Admin = ReturnType<typeof createAdmin>;
+
 export interface AdminConfig extends PostgRESTProxyConfig {
   /**
    * Authentication configuration. If not provided, the admin API will be
@@ -353,6 +355,7 @@ export function createAdmin(config: AdminConfig) {
 
   return {
     handler,
+    postgrestUrl: proxyConfig.postgrestUrl,
     registry: hookRegistry,
   };
 }

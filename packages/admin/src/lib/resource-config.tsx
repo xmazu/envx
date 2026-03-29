@@ -1,9 +1,10 @@
 import { LayoutDashboard } from 'lucide-react';
-import type { IResourceItem } from '@/types';
+import type { ResourceItem } from '@/types/resources';
 
-export const resources: IResourceItem[] = [
+export const resources: ResourceItem[] = [
   {
     name: 'dashboard',
+    label: 'Dashboard',
     list: '/',
     meta: {
       label: 'Dashboard',

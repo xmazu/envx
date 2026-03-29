@@ -14,7 +14,7 @@ export interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export interface AuthProviderProps {
-  authClient: AuthClient;
+  authClient?: AuthClient;
   children: React.ReactNode;
   skipSessionFetch?: boolean;
 }
@@ -55,7 +55,9 @@ export function AuthProvider({
   // }, [ skipSessionFetch]);
 
   const signOut = useCallback(async () => {
-    await authClient.signOut();
+    if (authClient) {
+      await authClient.signOut();
+    }
     setSession(null);
   }, [authClient]);
 

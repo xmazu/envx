@@ -1,7 +1,7 @@
 'use client';
 
 import { useContext, useMemo } from 'react';
-import type { IResourceItem, TreeMenuItem } from '@/types';
+import type { ResourceItem, TreeMenuItem } from '@/types/resources';
 import { ResourcesContext } from './use-resources';
 
 export interface UseMenuResult {
@@ -22,7 +22,7 @@ export function useMenu(): UseMenuResult {
   }, [context]);
 }
 
-function buildMenuItems(resources: IResourceItem[]): TreeMenuItem[] {
+function buildMenuItems(resources: ResourceItem[]): TreeMenuItem[] {
   const items: TreeMenuItem[] = [];
 
   for (const resource of resources) {
@@ -33,7 +33,7 @@ function buildMenuItems(resources: IResourceItem[]): TreeMenuItem[] {
 
     const item: TreeMenuItem = {
       name: resource.name,
-      key: resource.identifier ?? resource.name,
+      key: resource.name,
       route: resource.list,
       label: resource.meta?.label ?? resource.label ?? resource.name,
       icon: resource.meta?.icon ?? resource.icon,

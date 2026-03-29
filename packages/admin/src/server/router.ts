@@ -1,5 +1,4 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { createMergedConfig, resourceRegistry } from '@/lib/define-resource';
 import { autoGenerateField } from '@/lib/resource-types';
 import {
   fetchColumns,
@@ -13,18 +12,6 @@ const LABEL_REGEX_UNDERSCORE = /_/g;
 const LABEL_REGEX_CAMEL = /([A-Z])/g;
 const LABEL_REGEX_LEADING_SPACE = /^\s+/;
 const LABEL_REGEX_EXTRA_SPACES = /\s+/g;
-
-export interface PostgRESTProxyConfig {
-  getToken?: (request: NextRequest) => Promise<string | null> | string | null;
-  postgrestUrl: string;
-  transformRequest?: (
-    request: NextRequest
-  ) => Promise<NextRequest> | NextRequest;
-}
-
-export interface RouteContext {
-  params: Promise<{ path: string[] }>;
-}
 
 function formatLabel(name: string): string {
   return name
@@ -44,10 +31,6 @@ function buildConfigFromSchema(schema: TableSchema) {
   return {
     label: formatLabel(schema.name),
     fields,
-    canCreate: true,
-    canEdit: true,
-    canDelete: true,
-    canShow: true,
     list: {
       columns: fields
         .filter((f) => !['id', 'created_at', 'updated_at'].includes(f.name))
@@ -65,6 +48,18 @@ function buildConfigFromSchema(schema: TableSchema) {
   };
 }
 
+export interface PostgRESTProxyConfig {
+  getToken?: (request: NextRequest) => Promise<string | null> | string | null;
+  postgrestUrl: string;
+  transformRequest?: (
+    request: NextRequest
+  ) => Promise<NextRequest> | NextRequest;
+}
+
+export interface RouteContext {
+  params: Promise<{ path: string[] }>;
+}
+
 export function createPostgRESTProxy(config: PostgRESTProxyConfig) {
   const { postgrestUrl, getToken, transformRequest } = config;
 
@@ -80,12 +75,9 @@ export function createPostgRESTProxy(config: PostgRESTProxyConfig) {
 
     try {
       const schema = await fetchTableSchema(tableName);
-      const autoConfig = buildConfigFromSchema(schema);
+      const config = buildConfigFromSchema(schema);
 
-      const manualConfig = resourceRegistry.get(tableName)?.config;
-      const mergedConfig = createMergedConfig(manualConfig, autoConfig);
-
-      return NextResponse.json({ config: mergedConfig });
+      return NextResponse.json({ config });
     } catch (error) {
       return NextResponse.json(
         { error: 'Failed to build resource config', message: String(error) },
@@ -217,12 +209,6 @@ export function createPostgRESTProxy(config: PostgRESTProxyConfig) {
     }
 
     try {
-      console.error('[PostgREST Proxy] Forwarding request:', {
-        method: request.method,
-        url: targetUrl.toString(),
-        hasToken: !!token,
-      });
-
       const response = await fetch(targetUrl.toString(), {
         method: request.method,
         headers,
@@ -230,16 +216,6 @@ export function createPostgRESTProxy(config: PostgRESTProxyConfig) {
           ? null
           : await request.text(),
       });
-
-      console.error('[PostgREST Proxy] Response:', {
-        status: response.status,
-        statusText: response.statusText,
-      });
-
-      if (!response.ok) {
-        const errorBody = await response.text();
-        console.error('[PostgREST Proxy] Error response body:', errorBody);
-      }
 
       const responseHeaders = new Headers(response.headers);
       responseHeaders.delete('content-encoding');
@@ -250,7 +226,6 @@ export function createPostgRESTProxy(config: PostgRESTProxyConfig) {
         headers: responseHeaders,
       });
     } catch (error) {
-      console.error('[PostgREST Proxy] Fetch error:', error);
       return NextResponse.json(
         { error: 'Proxy error', message: String(error) },
         { status: 502 }

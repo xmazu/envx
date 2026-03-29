@@ -37,19 +37,16 @@ export const ShowViewHeader = ({
 
   const getUserFriendlyName = useUserFriendlyName();
 
-  const { resource, identifier } = useResourceParams({
+  const { resource } = useResourceParams({
     resource: resourceFromProps,
   });
   const { id: recordItemId } = useResourceParams();
 
-  const resourceName = resource?.name ?? identifier;
+  const resourceName = resource?.name;
 
   const title =
     titleFromProps ??
-    getUserFriendlyName(
-      resource?.meta?.label ?? identifier ?? resource?.name,
-      'singular'
-    );
+    getUserFriendlyName(resource?.meta?.label ?? resource?.name, 'singular');
 
   return (
     <div className={cn('flex flex-col', 'gap-4', wrapperClassName)}>
@@ -92,5 +89,3 @@ export const ShowViewHeader = ({
     </div>
   );
 };
-
-ShowView.displayName = 'ShowView';

@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo } from 'react';
-import { resources } from '@/lib/resource-config';
 import type { AdminOptions } from '@/types';
 
 const defaultOptions: AdminOptions = {
@@ -9,14 +8,13 @@ const defaultOptions: AdminOptions = {
     text: 'Admin',
     icon: null,
   },
-  resources,
 };
 
 export interface UseAdminOptionsResult {
   options: AdminOptions;
   title: {
-    text: string;
     icon: React.ReactNode;
+    text: string;
   };
 }
 

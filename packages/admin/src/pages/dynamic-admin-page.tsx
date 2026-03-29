@@ -6,6 +6,7 @@ import { parsePath } from './admin-utils';
 import { CreatePageView } from './create-page';
 import { EditPageView } from './edit-page';
 import { ListPageView } from './list-page';
+import { NestedListPageView } from './nested-list-page';
 import { ShowPageView } from './show-page';
 
 interface DynamicAdminPageProps {
@@ -17,7 +18,7 @@ interface DynamicAdminPageProps {
 
 export function DynamicAdminPage({ params, className }: DynamicAdminPageProps) {
   const path = params?.path || [];
-  const { resourceName, viewMode, recordId } = parsePath(path);
+  const { resourceName, viewMode, recordId, nestedInfo } = parsePath(path);
 
   if (viewMode === 'dashboard') {
     return (
@@ -31,6 +32,18 @@ export function DynamicAdminPage({ params, className }: DynamicAdminPageProps) {
     return (
       <div className={cn('p-6', className)}>
         <div className="text-destructive">Invalid resource</div>
+      </div>
+    );
+  }
+
+  if (viewMode === 'nested-list' && nestedInfo) {
+    return (
+      <div className={cn('p-6', className)}>
+        <NestedListPageView
+          nestedResourceName={nestedInfo.nestedResourceName}
+          parentId={nestedInfo.parentId}
+          parentResourceName={resourceName}
+        />
       </div>
     );
   }

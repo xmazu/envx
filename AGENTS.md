@@ -57,6 +57,7 @@ OpenEnvX is a local-first development runtime for micro-SaaS builders. It consis
 - Named exports preferred over default exports
 - Use Zod for runtime validation
 - Custom error classes for domain errors
+- **Never use `I` prefix for interfaces** - use `ResourceItem` not `IResourceItem`
 
 ## Do's
 

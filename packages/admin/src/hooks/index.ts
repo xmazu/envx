@@ -5,12 +5,15 @@ export type {
   BaseKey,
   BreadcrumbItem,
   ButtonHookResult,
-  IResourceItem,
   RefreshButtonHookResult,
   TranslateFunction,
   TreeMenuItem,
   UserFriendlyNameOptions,
 } from '@/types';
+export type {
+  NestedResourceItem,
+  ResourceItem,
+} from '@/types/resources';
 export { useActiveAuthProvider } from './use-active-auth-provider';
 export {
   AdminContextProvider,

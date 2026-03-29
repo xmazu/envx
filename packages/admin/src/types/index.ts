@@ -9,20 +9,6 @@ export interface ResourceMeta {
   [key: string]: unknown;
 }
 
-export interface IResourceItem {
-  clone?: string;
-  create?: string;
-  edit?: string;
-  icon?: React.ReactNode;
-  identifier?: string;
-  label?: string;
-  list?: string;
-  meta?: ResourceMeta;
-  name: string;
-  route?: string;
-  show?: string;
-}
-
 export interface TreeMenuItem {
   children?: TreeMenuItem[];
   icon?: React.ReactNode;
@@ -83,7 +69,6 @@ export interface AuthClient {
 
 export interface AdminOptions {
   authProvider?: AuthProvider;
-  resources?: IResourceItem[];
   title?: {
     text?: string;
     icon?: React.ReactNode;

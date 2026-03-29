@@ -1,23 +1,24 @@
 export {
+  type Admin,
   type AdminAuthConfig,
   type AdminConfig,
   createAdmin,
-} from './server/admin';
+} from '../server/admin';
 export {
   type BetterAuthTokenExtractorConfig,
   type BetterAuthUser,
   createBetterAuthTokenExtractor,
-} from './server/auth-proxy';
+} from '../server/auth-proxy';
 export type {
   ColumnInfo,
   ForeignKeyInfo,
   TableSchema,
-} from './server/introspection';
+} from '../server/introspection';
 export {
   type AuthMiddlewareConfig,
   createAuthMiddleware,
   createBetterAuthChecker,
-} from './server/middleware';
+} from '../server/middleware';
 export {
   composeMiddleware,
   createConditionalMiddleware,
@@ -25,9 +26,9 @@ export {
   type Middleware,
   type MiddlewareFunction,
   type MiddlewareNextFunction,
-} from './server/middleware-compose';
-export { getResources } from './server/resources';
+} from '../server/middleware-compose';
+export { getResources } from '../server/resources';
 export {
   createPostgRESTProxy,
   type PostgRESTProxyConfig,
-} from './server/router';
+} from '../server/router';
