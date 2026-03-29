@@ -29,6 +29,7 @@ export interface ResourceConfig {
 export type ResourcesConfig = Record<string, ResourceConfig>;
 
 export interface ResourceItem {
+  config?: ResourceConfig;
   create?: string;
   displayField?: string;
   edit?: string;

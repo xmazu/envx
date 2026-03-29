@@ -72,6 +72,7 @@ export function defineResources(config: ResourcesConfig): ResourceItem[] {
       },
       nested: buildNestedRoutes(name, resourceConfig.nested),
       displayField: resourceConfig.displayField ?? 'name',
+      config: resourceConfig,
     };
 
     resources.push(resource);

@@ -11,7 +11,7 @@ interface CreatePageViewProps {
 }
 
 export function CreatePageView({ resourceName }: CreatePageViewProps) {
-  const { config, loading: configLoading } = useResourceConfig(resourceName);
+  const config = useResourceConfig(resourceName);
   const dataProvider = useDataProvider();
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -35,7 +35,7 @@ export function CreatePageView({ resourceName }: CreatePageViewProps) {
     }
   };
 
-  if (configLoading || !config) {
+  if (!config) {
     return (
       <CreateView>
         <CreateViewHeader />

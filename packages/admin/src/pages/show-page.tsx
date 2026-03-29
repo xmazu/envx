@@ -18,7 +18,7 @@ interface ShowPageViewProps {
 }
 
 export function ShowPageView({ resourceName, recordId }: ShowPageViewProps) {
-  const { config, loading: configLoading } = useResourceConfig(resourceName);
+  const config = useResourceConfig(resourceName);
   const { resources } = useResources();
   const { query } = useShow({
     resource: resourceName,
@@ -40,7 +40,7 @@ export function ShowPageView({ resourceName, recordId }: ShowPageViewProps) {
     <ShowView>
       <ShowViewHeader />
       <div className={cn('rounded-md border p-6')}>
-        {configLoading || query.isLoading || !record ? (
+        {query.isLoading || !record ? (
           <div className="space-y-4">
             <Skeleton className="h-6 w-full" />
             <Skeleton className="h-6 w-full" />

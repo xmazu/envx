@@ -12,7 +12,7 @@ interface EditPageViewProps {
 }
 
 export function EditPageView({ resourceName, recordId }: EditPageViewProps) {
-  const { config, loading: configLoading } = useResourceConfig(resourceName);
+  const config = useResourceConfig(resourceName);
   const dataProvider = useDataProvider();
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -66,7 +66,7 @@ export function EditPageView({ resourceName, recordId }: EditPageViewProps) {
     }
   };
 
-  if (configLoading || !config || isRecordLoading || !record) {
+  if (!config || isRecordLoading || !record) {
     return (
       <EditView>
         <EditViewHeader />

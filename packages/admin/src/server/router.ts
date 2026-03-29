@@ -1,52 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { autoGenerateField } from '@/lib/resource-types';
-import {
-  fetchColumns,
-  fetchReferenceData,
-  fetchTableSchema,
-  fetchTables,
-  type TableSchema,
-} from './introspection';
-
-const LABEL_REGEX_UNDERSCORE = /_/g;
-const LABEL_REGEX_CAMEL = /([A-Z])/g;
-const LABEL_REGEX_LEADING_SPACE = /^\s+/;
-const LABEL_REGEX_EXTRA_SPACES = /\s+/g;
-
-function formatLabel(name: string): string {
-  return name
-    .replace(LABEL_REGEX_UNDERSCORE, ' ')
-    .replace(LABEL_REGEX_CAMEL, ' $1')
-    .replace(LABEL_REGEX_LEADING_SPACE, '')
-    .replace(LABEL_REGEX_EXTRA_SPACES, ' ')
-    .toLowerCase()
-    .replace(/\b\w/g, (l) => l.toUpperCase());
-}
-
-function buildConfigFromSchema(schema: TableSchema) {
-  const fields = schema.columns.map((col) =>
-    autoGenerateField(col, schema.foreignKeys)
-  );
-
-  return {
-    label: formatLabel(schema.name),
-    fields,
-    list: {
-      columns: fields
-        .filter((f) => !['id', 'created_at', 'updated_at'].includes(f.name))
-        .slice(0, 5)
-        .map((f) => f.name),
-      searchable: fields
-        .filter((f) => ['text', 'textarea', 'email'].includes(f.type))
-        .slice(0, 3)
-        .map((f) => f.name),
-    },
-    form: {
-      layout: 'vertical' as const,
-      columns: 1,
-    },
-  };
-}
+import { fetchReferenceData } from './introspection';
 
 export interface PostgRESTProxyConfig {
   getToken?: (request: NextRequest) => Promise<string | null> | string | null;
@@ -62,76 +15,6 @@ export interface RouteContext {
 
 export function createPostgRESTProxy(config: PostgRESTProxyConfig) {
   const { postgrestUrl, getToken, transformRequest } = config;
-
-  async function handleResourceConfig(
-    _request: NextRequest,
-    path: string[]
-  ): Promise<NextResponse | null> {
-    if (path[0] !== 'resources' || path[2] !== 'config') {
-      return null;
-    }
-
-    const tableName = path[1];
-
-    try {
-      const schema = await fetchTableSchema(tableName);
-      const config = buildConfigFromSchema(schema);
-
-      return NextResponse.json({ config });
-    } catch (error) {
-      return NextResponse.json(
-        { error: 'Failed to build resource config', message: String(error) },
-        { status: 500 }
-      );
-    }
-  }
-
-  async function handleIntrospection(
-    request: NextRequest,
-    path: string[]
-  ): Promise<NextResponse | null> {
-    if (path[0] !== 'introspection') {
-      return null;
-    }
-
-    const subPath = path.slice(1);
-
-    try {
-      if (subPath[0] === 'tables' && request.method === 'GET') {
-        const tables = await fetchTables();
-        return NextResponse.json(tables.map((name) => ({ table_name: name })));
-      }
-
-      if (subPath[0] === 'columns' && subPath[1] && request.method === 'GET') {
-        const tableName = subPath[1];
-        const columns = await fetchColumns(tableName);
-        return NextResponse.json(
-          columns.map((col) => ({
-            column_name: col.name,
-            data_type: col.dataType,
-            is_nullable: col.isNullable ? 'YES' : 'NO',
-            column_default: col.defaultValue,
-          }))
-        );
-      }
-
-      if (subPath[0] === 'schema' && subPath[1] && request.method === 'GET') {
-        const tableName = subPath[1];
-        const schema = await fetchTableSchema(tableName);
-        return NextResponse.json(schema);
-      }
-
-      return NextResponse.json(
-        { error: 'Invalid introspection endpoint' },
-        { status: 404 }
-      );
-    } catch (error) {
-      return NextResponse.json(
-        { error: 'Introspection error', message: String(error) },
-        { status: 500 }
-      );
-    }
-  }
 
   async function handleRelationships(
     request: NextRequest,
@@ -170,16 +53,6 @@ export function createPostgRESTProxy(config: PostgRESTProxyConfig) {
   ): Promise<NextResponse> {
     const params = await context.params;
     const path = params.path || [];
-
-    const resourceConfigResponse = await handleResourceConfig(request, path);
-    if (resourceConfigResponse) {
-      return resourceConfigResponse;
-    }
-
-    const introspectionResponse = await handleIntrospection(request, path);
-    if (introspectionResponse) {
-      return introspectionResponse;
-    }
 
     const relationshipsResponse = await handleRelationships(request, path);
     if (relationshipsResponse) {

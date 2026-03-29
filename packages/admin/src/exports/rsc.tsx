@@ -1,5 +1,6 @@
 import type React from 'react';
 import { AdminProvider } from '../components/admin-provider';
+import { enhanceResourcesWithIntrospection } from '../lib/enhance-resource-config';
 import { fetchAllSchemas } from '../server/introspection';
 import type { AuthClient } from '../types';
 import type { IntrospectionData, ResourceItem } from '../types/resources';
@@ -19,6 +20,7 @@ export async function AdminServerProvider({
   resources,
 }: AdminServerProviderProps) {
   let introspection: IntrospectionData | undefined;
+  let enhancedResources = resources;
 
   try {
     const tables = await fetchAllSchemas();
@@ -26,6 +28,7 @@ export async function AdminServerProvider({
       tables,
       version: '1.0.0',
     };
+    enhancedResources = enhanceResourcesWithIntrospection(resources, tables);
   } catch (error) {
     console.warn('Failed to fetch database introspection:', error);
   }
@@ -34,7 +37,7 @@ export async function AdminServerProvider({
     <AdminProvider
       authClient={authClient}
       introspection={introspection}
-      resources={resources}
+      resources={enhancedResources}
     >
       {children}
     </AdminProvider>

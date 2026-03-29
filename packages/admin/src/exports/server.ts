@@ -27,7 +27,6 @@ export {
   type MiddlewareFunction,
   type MiddlewareNextFunction,
 } from '../server/middleware-compose';
-export { getResources } from '../server/resources';
 export {
   createPostgRESTProxy,
   type PostgRESTProxyConfig,

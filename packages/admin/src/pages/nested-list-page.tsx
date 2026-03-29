@@ -34,8 +34,7 @@ export function NestedListPageView({
 
   const parentField = nestedConfig?.parentField ?? `${parentResourceName}_id`;
 
-  const { config, loading: configLoading } =
-    useResourceConfig(nestedResourceName);
+  const config = useResourceConfig(nestedResourceName);
 
   const filters = useMemo(
     () => [{ field: parentField, operator: 'eq', value: parentId }],
@@ -49,7 +48,7 @@ export function NestedListPageView({
   });
 
   const records = (listResult.result?.data || []) as Record<string, unknown>[];
-  const isLoading = listResult.query?.isPending || configLoading;
+  const isLoading = listResult.query?.isPending;
 
   const displayColumns = useMemo(() => {
     if (!config?.list?.columns || config.list.columns.length === 0) {

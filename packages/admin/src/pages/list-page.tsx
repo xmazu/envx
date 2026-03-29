@@ -26,7 +26,7 @@ interface ListPageViewProps {
 }
 
 export function ListPageView({ resourceName }: ListPageViewProps) {
-  const { config, loading: configLoading } = useResourceConfig(resourceName);
+  const config = useResourceConfig(resourceName);
   const listResult = useList({
     resource: resourceName,
     pagination: { pageSize: 25 },
@@ -34,7 +34,7 @@ export function ListPageView({ resourceName }: ListPageViewProps) {
   const [selectedIds, setSelectedIds] = useState<(string | number)[]>([]);
 
   const records = (listResult.result?.data || []) as Record<string, unknown>[];
-  const isLoading = listResult.query?.isPending || configLoading;
+  const isLoading = listResult.query?.isPending;
   const hasBulkActions = (config?.list?.bulkActions?.length ?? 0) > 0;
 
   const displayColumns = useMemo(() => {
