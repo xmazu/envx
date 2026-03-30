@@ -4,7 +4,7 @@ import type {
   ListParams,
   ResourceHooks,
 } from '@/lib/resource-types';
-import type { ResourceItem } from '@/types/resources';
+import type { AdminSchema, ResolvedResource } from '@/lib/schema-types';
 import { createPostgRESTProxy, type PostgRESTProxyConfig } from './router';
 
 export interface AdminAuthConfig {
@@ -27,7 +27,8 @@ export interface AdminConfig extends PostgRESTProxyConfig {
    * publicly accessible (not recommended for production).
    */
   auth?: AdminAuthConfig;
-  resources?: ResourceItem[];
+  resources?: ResolvedResource[];
+  schema?: AdminSchema;
 }
 
 interface HookRegistry {
@@ -35,12 +36,12 @@ interface HookRegistry {
   has: (resourceName: string) => boolean;
 }
 
-function createHookRegistry(resources: ResourceItem[]): HookRegistry {
+function createHookRegistry(resources: ResolvedResource[]): HookRegistry {
   const registry = new Map<string, ResourceHooks>();
 
   for (const resource of resources) {
-    if (resource.config?.hooks) {
-      registry.set(resource.name, resource.config.hooks);
+    if (resource.hooks) {
+      registry.set(resource.name, resource.hooks);
     }
   }
 

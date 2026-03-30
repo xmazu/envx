@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from 'react';
 import type { BulkAction } from '@/components/bulk-operations';
 import { BulkOperations } from '@/components/bulk-operations';
 import { useList, useResourceConfig } from '@/hooks';
+import { useFieldRenderer, useListSlots } from '@/hooks/use-view-config';
 import type { BulkActionConfig } from '@/lib/resource-types';
 import { DeleteButton } from '@/ui/buttons/delete';
 import { EditButton } from '@/ui/buttons/edit';
@@ -25,8 +26,29 @@ interface ListPageViewProps {
   resourceName: string;
 }
 
+function TableCellContent({
+  column,
+  record,
+  resourceName,
+}: {
+  column: string;
+  record: Record<string, unknown>;
+  resourceName: string;
+}) {
+  const fieldRenderer = useFieldRenderer(resourceName, column);
+  const value = record[column];
+
+  if (fieldRenderer) {
+    const Component = fieldRenderer;
+    return <Component field={column} record={record} value={value} />;
+  }
+
+  return <>{formatCellValue(value)}</>;
+}
+
 export function ListPageView({ resourceName }: ListPageViewProps) {
   const config = useResourceConfig(resourceName);
+  const slots = useListSlots(resourceName);
   const listResult = useList({
     resource: resourceName,
     pagination: { pageSize: 25 },
@@ -135,13 +157,14 @@ export function ListPageView({ resourceName }: ListPageViewProps) {
     }
 
     if (records.length === 0) {
+      const EmptySlot = slots?.empty;
       return (
         <TableRow>
           <TableCell
             className="h-24 text-center"
             colSpan={displayColumns.length + (hasBulkActions ? 2 : 1)}
           >
-            No records found.
+            {EmptySlot ? <EmptySlot /> : 'No records found.'}
           </TableCell>
         </TableRow>
       );
@@ -167,7 +190,11 @@ export function ListPageView({ resourceName }: ListPageViewProps) {
           )}
           {displayColumns.map((column) => (
             <TableCell key={column}>
-              {formatCellValue(record[column])}
+              <TableCellContent
+                column={column}
+                record={record}
+                resourceName={resourceName}
+              />
             </TableCell>
           ))}
           <TableCell>
@@ -182,9 +209,13 @@ export function ListPageView({ resourceName }: ListPageViewProps) {
     });
   }
 
+  const BeforeSlot = slots?.before;
+  const AfterSlot = slots?.after;
+
   return (
     <ListView>
       <ListViewHeader canCreate={config?.canCreate ?? true} />
+      {BeforeSlot && <BeforeSlot />}
       {hasBulkActions && selectedIds.length > 0 && (
         <BulkOperations
           actions={bulkActions}
@@ -214,6 +245,7 @@ export function ListPageView({ resourceName }: ListPageViewProps) {
           <TableBody>{renderTableBody()}</TableBody>
         </Table>
       </div>
+      {AfterSlot && <AfterSlot />}
     </ListView>
   );
 }

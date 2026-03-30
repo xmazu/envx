@@ -11,12 +11,9 @@ import {
 import { FieldArray } from '@/components/field-array';
 import { RelationshipField } from '@/components/relationship-field';
 import { useResourceParams } from '@/hooks/use-resource-params';
-import type {
-  ArrayFieldConfig,
-  FieldConfig,
-  ResourceConfig,
-} from '@/lib/resource-types';
+import type { ArrayFieldConfig, FieldConfig } from '@/lib/resource-types';
 import { generateZodSchema } from '@/lib/schema-generator';
+import type { ResolvedResource } from '@/lib/schema-types';
 import { cn } from '@/lib/utils';
 import { Alert, AlertDescription } from '@/ui/shadcn/alert';
 import { Button } from '@/ui/shadcn/button';
@@ -35,7 +32,7 @@ export interface AutoFormProps {
   isLoading?: boolean;
   mode: 'create' | 'edit';
   onSubmit: (data: Record<string, unknown>) => Promise<void>;
-  resourceConfig: ResourceConfig;
+  resourceConfig: ResolvedResource;
 }
 
 function ConditionalField({
@@ -262,9 +259,12 @@ export function AutoForm({
   const resourceName = resource?.name;
 
   const visibleFields = useMemo(
-    () => resourceConfig.fields.filter((f) => !f.hidden),
-    [resourceConfig.fields]
-  );
+    () =>
+      resourceConfig.fieldsArray.filter(
+        (f) => !(f as { hidden?: boolean }).hidden
+      ),
+    [resourceConfig.fieldsArray]
+  ) as FieldConfig[];
 
   const schema = useMemo(
     () => generateZodSchema(visibleFields),

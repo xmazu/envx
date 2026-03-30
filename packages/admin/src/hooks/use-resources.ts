@@ -1,17 +1,26 @@
 'use client';
 
-import React, { createContext, useContext, useMemo } from 'react';
-import type { ResourceItem, TreeMenuItem } from '@/types/resources';
+import React, { createContext, useContext } from 'react';
+import type { AdminSchema, ResolvedAdminSchema } from '@/lib/schema-types';
+import type {
+  AdminViews,
+  FieldRenderer,
+  ResolvedViewConfig,
+} from '@/lib/view-types';
 
 interface ResourcesContextValue {
-  menuItems: TreeMenuItem[];
-  resources: ResourceItem[];
+  resolvedViews: Record<string, ResolvedViewConfig>;
+  schema: ResolvedAdminSchema;
   selectedKey?: string;
 }
 
 export const ResourcesContext = createContext<ResourcesContextValue>({
-  menuItems: [],
-  resources: [],
+  schema: {
+    resources: new Map(),
+    menu: [],
+    resourceNames: [],
+  },
+  resolvedViews: {},
 });
 
 export function useResources(): ResourcesContextValue {
@@ -20,33 +29,43 @@ export function useResources(): ResourcesContextValue {
 
 interface ResourcesProviderProps {
   children: React.ReactNode;
-  resources: ResourceItem[];
+  schema: ResolvedAdminSchema;
+  views?: AdminViews<AdminSchema>;
 }
 
 export function ResourcesProvider({
   children,
-  resources,
+  schema,
+  views,
 }: ResourcesProviderProps) {
-  const value = useMemo(() => {
-    const menuItems = buildMenuItems(resources);
+  const value = React.useMemo(() => {
+    const resolvedViews: Record<string, ResolvedViewConfig> = {};
+
+    for (const resourceName of schema.resources.keys()) {
+      const viewConfig = views?.[resourceName as keyof AdminViews<AdminSchema>];
+
+      const fieldsArray: Array<{ name: string; render?: FieldRenderer }> = [];
+      if (viewConfig && 'fields' in viewConfig && viewConfig.fields) {
+        for (const [name, config] of Object.entries(viewConfig.fields)) {
+          const fieldConfig = config as { render?: FieldRenderer } | undefined;
+          fieldsArray.push({ name, render: fieldConfig?.render });
+        }
+      }
+
+      resolvedViews[resourceName] = {
+        fields: fieldsArray,
+        list: viewConfig?.list || {},
+        show: viewConfig?.show || {},
+        form: viewConfig?.form || {},
+      };
+    }
 
     return {
-      resources,
-      menuItems,
+      schema,
+      resolvedViews,
       selectedKey: undefined,
     };
-  }, [resources]);
+  }, [schema, views]);
 
   return React.createElement(ResourcesContext.Provider, { value }, children);
-}
-
-function buildMenuItems(resources: ResourceItem[]): TreeMenuItem[] {
-  return resources.map((resource) => ({
-    name: resource.name,
-    key: resource.name,
-    route: resource.list,
-    label: resource.meta?.label ?? resource.label ?? resource.name,
-    icon: resource.meta?.icon ?? resource.icon,
-    meta: resource.meta,
-  }));
 }

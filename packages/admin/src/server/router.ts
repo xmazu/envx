@@ -1,11 +1,14 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import type { ResourceItem } from '@/types/resources';
+import type {
+  ReferenceSchemaField,
+  ResolvedResource,
+} from '@/lib/schema-types';
 import { fetchReferenceData } from './introspection';
 
 export interface PostgRESTProxyConfig {
   getToken?: (request: NextRequest) => Promise<string | null> | string | null;
   postgrestUrl: string;
-  resources?: ResourceItem[];
+  resources?: ResolvedResource[];
   transformRequest?: (
     request: NextRequest
   ) => Promise<NextRequest> | NextRequest;
@@ -45,11 +48,12 @@ export function createPostgRESTProxy(config: PostgRESTProxyConfig) {
 
       if (sourceResource && sourceField) {
         const sourceRes = resources.find((r) => r.name === sourceResource);
-        if (sourceRes?.config?.fields) {
-          const field = sourceRes.config.fields.find(
-            (f) => f.name === sourceField && f.type === 'reference'
+        if (sourceRes?.fieldsArray) {
+          const field = sourceRes.fieldsArray.find(
+            (f): f is ReferenceSchemaField =>
+              f.name === sourceField && f.type === 'reference'
           );
-          if (field && 'reference' in field && field.reference?.displayField) {
+          if (field?.reference.displayField) {
             displayField = field.reference.displayField;
           }
         }

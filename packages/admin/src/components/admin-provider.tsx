@@ -3,28 +3,31 @@
 import { AuthProvider } from '@/context/auth-context';
 import { AdminContextProvider } from '@/hooks';
 import { ResourcesProvider } from '@/hooks/use-resources';
+import type { AdminSchema, ResolvedAdminSchema } from '@/lib/schema-types';
+import type { AdminViews } from '@/lib/view-types';
 import type { AuthClient } from '@/types';
-import type { ResourceItem } from '@/types/resources';
 import { Layout } from '@/ui/layout/layout';
 
 export interface AdminProviderProps {
   authClient?: AuthClient;
   children: React.ReactNode;
-  resources: ResourceItem[];
+  schema: ResolvedAdminSchema;
+  views?: AdminViews<AdminSchema>;
 }
 
-export const AdminProvider = ({
+export function AdminProvider({
   children,
-  resources,
+  schema,
+  views,
   authClient,
-}: AdminProviderProps) => {
+}: AdminProviderProps) {
   return (
     <AuthProvider authClient={authClient} skipSessionFetch>
       <AdminContextProvider>
-        <ResourcesProvider resources={resources}>
+        <ResourcesProvider schema={schema} views={views}>
           <Layout>{children}</Layout>
         </ResourcesProvider>
       </AdminContextProvider>
     </AuthProvider>
   );
-};
+}

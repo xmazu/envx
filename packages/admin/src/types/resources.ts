@@ -1,35 +1,9 @@
-import type { FieldConfig, ResourceHooks } from '@/lib/resource-types';
+import type { ResolvedResource } from '@/lib/schema-types';
 
-export interface NestedResourceConfig {
-  fields?: FieldConfig[];
-  icon?: string;
-  label: string;
-  parentField?: string;
-}
-
-export interface ResourceConfig {
-  description?: string;
-  displayField?: string;
-  fields?: FieldConfig[];
-  form?: {
-    layout?: 'vertical' | 'horizontal' | 'grid';
-    columns?: number;
-  };
-  hooks?: ResourceHooks;
-  icon?: string;
-  label: string;
-  list?: {
-    columns?: string[];
-    searchable?: string[];
-    perPage?: number;
-  };
-  nested?: Record<string, NestedResourceConfig>;
-}
-
-export type ResourcesConfig = Record<string, ResourceConfig>;
+export type ResourcesConfig = Record<string, ResolvedResource>;
 
 export interface ResourceItem {
-  config?: ResourceConfig;
+  config?: ResolvedResource;
   create?: string;
   displayField?: string;
   edit?: string;
@@ -60,20 +34,6 @@ export interface NestedResourceItem {
   name: string;
   parentField?: string;
   show?: string;
-}
-
-export interface TreeMenuItem {
-  children?: TreeMenuItem[];
-  icon?: string;
-  key: string;
-  label: string;
-  meta?: {
-    label?: string;
-    icon?: string;
-    [key: string]: unknown;
-  };
-  name: string;
-  route?: string;
 }
 
 export interface BreadcrumbItem {

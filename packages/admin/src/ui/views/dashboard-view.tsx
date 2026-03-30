@@ -48,7 +48,8 @@ interface AdminDashboardProps {
 }
 
 export function AdminDashboard({ className }: AdminDashboardProps) {
-  const { resources } = useResources();
+  const { schema } = useResources();
+  const resources = Array.from(schema.resources.values());
 
   function renderResourcesContent() {
     if (resources.length === 0) {
@@ -64,7 +65,7 @@ export function AdminDashboard({ className }: AdminDashboardProps) {
         {resources.map((resource) => (
           <a
             className="flex items-center gap-2 rounded-md border p-3 transition-colors hover:bg-muted"
-            href={resource.list}
+            href={resource.paths.list}
             key={resource.name}
           >
             <Table2 className="h-4 w-4 text-muted-foreground" />
@@ -95,7 +96,7 @@ export function AdminDashboard({ className }: AdminDashboardProps) {
           description="Resources with list view"
           icon={<Table2 className="h-4 w-4 text-muted-foreground" />}
           title="Active Resources"
-          value={resources.filter((r) => r.list).length}
+          value={resources.filter((r) => r.paths.list).length}
         />
         <DashboardCard
           description="All systems operational"

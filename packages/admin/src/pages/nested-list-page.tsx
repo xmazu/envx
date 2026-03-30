@@ -28,11 +28,12 @@ export function NestedListPageView({
   parentId,
   parentResourceName,
 }: NestedListPageViewProps) {
-  const { resources } = useResources();
-  const parentResource = resources.find((r) => r.name === parentResourceName);
-  const nestedConfig = parentResource?.nested?.[nestedResourceName];
+  const { schema } = useResources();
+  const nestedResource = schema.resources
+    .get(parentResourceName)
+    ?.nested.get(nestedResourceName);
 
-  const parentField = nestedConfig?.parentField ?? `${parentResourceName}_id`;
+  const parentField = nestedResource?.parentField ?? `${parentResourceName}_id`;
 
   const config = useResourceConfig(nestedResourceName);
 
@@ -112,7 +113,7 @@ export function NestedListPageView({
     <ListView>
       <ListViewHeader
         canCreate={false}
-        title={nestedConfig?.label ?? nestedResourceName}
+        title={nestedResource?.label ?? nestedResourceName}
       />
       <div className="rounded-md border">
         <Table>

@@ -12,6 +12,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.4.0",
     "@types/react-dom": "^19.2.3",
+    "knip": "^6.1.0",
     "tsup": "^8.0.0",
     "turbo": "^2.8.13",
     "typescript": "^5.9.3",

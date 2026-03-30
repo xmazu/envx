@@ -39,7 +39,7 @@ export const ListViewHeader = ({
   });
   const resourceName = resource?.name;
 
-  const isCreateButtonVisible = canCreate ?? !!resource?.create;
+  const isCreateButtonVisible = canCreate ?? !!resource?.paths.create;
 
   const title =
     titleFromProps ??

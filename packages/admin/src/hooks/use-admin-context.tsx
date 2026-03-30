@@ -13,7 +13,7 @@ interface AdminContextValue {
 
 const AdminContext = createContext<AdminContextValue | null>(null);
 
-export function useAdminContext() {
+function useAdminContext() {
   const context = useContext(AdminContext);
   if (!context) {
     throw new Error(

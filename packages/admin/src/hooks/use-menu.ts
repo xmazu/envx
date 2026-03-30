@@ -1,7 +1,9 @@
 'use client';
 
 import { useContext, useMemo } from 'react';
-import type { ResourceItem, TreeMenuItem } from '@/types/resources';
+
+import type { TreeMenuItem } from '@/types';
+
 import { ResourcesContext } from './use-resources';
 
 export interface UseMenuResult {
@@ -13,35 +15,9 @@ export function useMenu(): UseMenuResult {
   const context = useContext(ResourcesContext);
 
   return useMemo(() => {
-    const menuItems = buildMenuItems(context?.resources ?? []);
-
     return {
-      menuItems,
+      menuItems: context?.schema.menu ?? [],
       selectedKey: context?.selectedKey,
     };
   }, [context]);
-}
-
-function buildMenuItems(resources: ResourceItem[]): TreeMenuItem[] {
-  const items: TreeMenuItem[] = [];
-
-  for (const resource of resources) {
-    // Skip resources without a list route
-    if (!resource.list) {
-      continue;
-    }
-
-    const item: TreeMenuItem = {
-      name: resource.name,
-      key: resource.name,
-      route: resource.list,
-      label: resource.meta?.label ?? resource.label ?? resource.name,
-      icon: resource.meta?.icon ?? resource.icon,
-      meta: resource.meta,
-    };
-
-    items.push(item);
-  }
-
-  return items;
 }

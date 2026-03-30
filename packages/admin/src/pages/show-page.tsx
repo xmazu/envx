@@ -19,21 +19,29 @@ interface ShowPageViewProps {
 
 export function ShowPageView({ resourceName, recordId }: ShowPageViewProps) {
   const config = useResourceConfig(resourceName);
-  const { resources } = useResources();
+  const { schema } = useResources();
   const { query } = useShow({
     resource: resourceName,
     id: recordId,
   });
 
   const record = query?.data?.data as Record<string, unknown> | undefined;
-  const resource = resources.find((r) => r.name === resourceName);
+  const resource = schema.resources.get(resourceName);
   const nestedResources = resource?.nested;
 
   const displayFields = useMemo(() => {
-    if (!config?.fields) {
+    if (!config?.fieldsArray) {
       return [];
     }
-    return config.fields.filter((f) => !f.hidden);
+
+    const showFieldNames = config.show?.fields;
+    if (showFieldNames && showFieldNames.length > 0) {
+      return config.fieldsArray.filter(
+        (f) => showFieldNames.includes(f.name) && !f.hidden
+      );
+    }
+
+    return config.fieldsArray.filter((f) => !f.hidden);
   }, [config]);
 
   return (
@@ -67,13 +75,13 @@ export function ShowPageView({ resourceName, recordId }: ShowPageViewProps) {
                 Back to List
               </ListButton>
             </div>
-            {nestedResources && Object.keys(nestedResources).length > 0 && (
+            {nestedResources && nestedResources.size > 0 && (
               <div className="mt-6 border-t pt-6">
                 <h3 className="mb-3 font-medium text-muted-foreground text-sm">
                   Related Resources
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {Object.entries(nestedResources).map(
+                  {Array.from(nestedResources.entries()).map(
                     ([name, nestedConfig]) => (
                       <Button asChild key={name} size="sm" variant="outline">
                         <Link href={`/${resourceName}/${recordId}/${name}`}>

@@ -1,14 +1,13 @@
 import { useMemo } from 'react';
-import type { ResourceConfig } from '@/lib/resource-types';
+import type { ResolvedResource } from '@/lib/schema-types';
 import { useResources } from './use-resources';
 
 export function useResourceConfig(
   tableName: string
-): ResourceConfig | undefined {
-  const { resources } = useResources();
+): ResolvedResource | undefined {
+  const { schema } = useResources();
 
   return useMemo(() => {
-    const resource = resources.find((r) => r.name === tableName);
-    return resource?.config as ResourceConfig | undefined;
-  }, [resources, tableName]);
+    return schema.resources.get(tableName);
+  }, [schema, tableName]);
 }

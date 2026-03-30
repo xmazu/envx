@@ -19,11 +19,13 @@
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
+    "change-case": "^5.4.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "jose": "^6.0.10",
     "lucide-react": "^1.7.0",
+    "pluralize": "^8.0.0",
     "postgres": "^3.4.8",
     "radix-ui": "^1.4.3",
     "react-day-picker": "^9.14.0",
@@ -34,6 +36,7 @@
     "@swc/core": "^1.15.21",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^25.3.5",
+    "@types/pluralize": "^0.0.33",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "next": "^16.2.1",

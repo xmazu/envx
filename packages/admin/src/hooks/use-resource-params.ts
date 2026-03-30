@@ -2,8 +2,8 @@
 
 import { useParams, usePathname } from 'next/navigation';
 import { useMemo } from 'react';
+import type { ResolvedResource } from '@/lib/schema-types';
 import type { BaseKey } from '@/types';
-import type { ResourceItem } from '@/types/resources';
 import { useResources } from './use-resources';
 
 export interface UseResourceParamsOptions {
@@ -13,7 +13,7 @@ export interface UseResourceParamsOptions {
 export interface UseResourceParamsResult {
   action?: string;
   id?: BaseKey;
-  resource?: ResourceItem;
+  resource?: ResolvedResource;
 }
 
 export function useResourceParams(
@@ -21,12 +21,11 @@ export function useResourceParams(
 ): UseResourceParamsResult {
   const params = useParams();
   const pathname = usePathname();
-  const { resources } = useResources();
+  const { schema } = useResources();
 
   return useMemo(() => {
-    // If resource is provided in options, use that
     if (options?.resource) {
-      const resource = resources.find((r) => r.name === options.resource);
+      const resource = schema.resources.get(options.resource);
       return {
         resource,
         id: params?.id as BaseKey | undefined,
@@ -34,32 +33,16 @@ export function useResourceParams(
       };
     }
 
-    // Otherwise, infer from pathname
     if (!pathname) {
       return {};
     }
 
-    // Parse pathname to find resource
     const segments = pathname.split('/').filter(Boolean);
+    const resourceName = segments[0];
 
-    // Find matching resource
-    for (const resource of resources) {
-      if (
-        resource.list &&
-        pathname.startsWith(resource.list.replace('/:id?', ''))
-      ) {
-        return {
-          resource,
-          id: params?.id as BaseKey | undefined,
-          action: params?.action as string | undefined,
-        };
-      }
-
-      // Check if pathname matches any resource route pattern
-      const resourceName = resource.name;
-
-      // Check for exact match or sub-routes
-      if (segments[0] === resourceName) {
+    if (resourceName) {
+      const resource = schema.resources.get(resourceName);
+      if (resource) {
         return {
           resource,
           id: params?.id as BaseKey | undefined,
@@ -68,10 +51,9 @@ export function useResourceParams(
       }
     }
 
-    // Default: return empty if no match
     return {
       id: params?.id as BaseKey | undefined,
       action: params?.action as string | undefined,
     };
-  }, [options?.resource, pathname, resources, params]);
+  }, [options?.resource, pathname, schema, params]);
 }
