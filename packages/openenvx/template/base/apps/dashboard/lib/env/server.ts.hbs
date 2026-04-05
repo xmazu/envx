@@ -22,16 +22,7 @@ export const env = createEnv({
     RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
 {{/if}}
   },
-  client: {
-    NEXT_PUBLIC_APP_URL: z.string().url("NEXT_PUBLIC_APP_URL must be a valid URL").default("http://localhost:3000"),
-{{#if features.stripe}}
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().min(1, "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is required"),
-{{/if}}
-{{#if features.email}}
-    NEXT_PUBLIC_FROM_EMAIL: z.string().email("NEXT_PUBLIC_FROM_EMAIL must be a valid email"),
-{{/if}}
-  },
-  runtimeEnv: process.env,
+  experimental__runtimeEnv: process.env,
 });
 
 export const isDevelopment = () => env.NODE_ENV === "development";

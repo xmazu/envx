@@ -22,6 +22,7 @@ export const dependencyCatalog = {
   'lucide-react': '^0.575.0',
   '@hookform/resolvers': '^3.10.0',
   'react-hook-form': '^7.54.0',
+  '@t3-oss/env-nextjs': '^0.13.11',
 } as const;
 
 export const SHADCN_COMPONENTS = [

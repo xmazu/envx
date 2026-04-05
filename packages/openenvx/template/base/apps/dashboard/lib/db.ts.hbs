@@ -1,4 +1,4 @@
 import { createDbClient } from '@{{projectName}}/db';
-import { env } from './env';
+import { env } from './env/server';
 
 export const db = createDbClient(env.DATABASE_URL);

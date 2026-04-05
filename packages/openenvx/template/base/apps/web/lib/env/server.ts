@@ -7,13 +7,7 @@ export const env = createEnv({
       .enum(['development', 'production', 'test'])
       .default('development'),
   },
-  client: {
-    NEXT_PUBLIC_APP_URL: z
-      .string()
-      .url('NEXT_PUBLIC_APP_URL must be a valid URL')
-      .default('http://localhost:3000'),
-  },
-  runtimeEnv: process.env,
+  experimental__runtimeEnv: process.env,
 });
 
 export const isDevelopment = () => env.NODE_ENV === 'development';

@@ -53,6 +53,7 @@ program
               { value: 'storage', label: 'S3 File Storage' },
               { value: 'email', label: 'Email (Resend)' },
             ],
+            required: false,
           }),
       },
       {

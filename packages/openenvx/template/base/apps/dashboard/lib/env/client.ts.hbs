@@ -1,0 +1,23 @@
+import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
+
+export const env = createEnv({
+  client: {
+    NEXT_PUBLIC_APP_URL: z.string().url("NEXT_PUBLIC_APP_URL must be a valid URL").default("http://localhost:3000"),
+{{#if features.stripe}}
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().min(1, "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is required"),
+{{/if}}
+{{#if features.email}}
+    NEXT_PUBLIC_FROM_EMAIL: z.string().email("NEXT_PUBLIC_FROM_EMAIL must be a valid email"),
+{{/if}}
+  },
+  runtimeEnv: {
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+{{#if features.stripe}}
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+{{/if}}
+{{#if features.email}}
+    NEXT_PUBLIC_FROM_EMAIL: process.env.NEXT_PUBLIC_FROM_EMAIL,
+{{/if}}
+  },
+});
